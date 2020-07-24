@@ -15,7 +15,7 @@
 # min_female_find side of the vacuum device in a women's bracelet
 
 from math import pi, sqrt
-from wrist import pHi
+from wrist import pHi, Male_wrst, Female_wrst
 # from sympy import solve, Symbol
 
 
@@ -46,7 +46,7 @@ class InitSet:
         return mff
 
 
-is1 = InitSet(male_wrist=180, female_wrist=150, tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
+is1 = InitSet(male_wrist=Male_wrst, female_wrist=Female_wrst, tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
 
 
 # x = Symbol("x")
@@ -55,6 +55,10 @@ is1 = InitSet(male_wrist=180, female_wrist=150, tube=1.5, dif_hw=0.7, add_v_shel
 
 # print(minfndm0)
 # print(minfndf0)
+middlbrs = int((is1.min_male_fnd() + is1.min_female_fnd()) * 5)
+# lower cycle limit 10/1
+
 if __name__ == "__main__":
     print(is1.min_male_fnd())
     print(is1.min_female_fnd())
+    print(middlbrs)
