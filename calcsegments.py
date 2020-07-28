@@ -16,7 +16,7 @@
 
 from math import pi, sqrt
 from wrist import pHi, Male_wrst, Female_wrst
-# from sympy import solve, Symbol
+from sympy import solve, Symbol
 
 
 class InitSet:
@@ -46,19 +46,37 @@ class InitSet:
         return mff
 
 
-is1 = InitSet(male_wrist=Male_wrst, female_wrist=Female_wrst, tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
+class ModuleIS(InitSet):
 
+    def pipeloop(self, r):
+        lp = r * 2 * pi
+        vl = lp * pi * self.rad_tub**2
+        vl3 = vl * 3
+        x = Symbol("x")
+        return solve([(x**3 * self.dif_hw)/3 - vl3], x)
+
+    def pipeloop2(self, r):
+        lp = r * 2 * pi
+        vl = lp * pi * self.rad_tub ** 2
+        vl3 = vl * 3
+
+
+is1 = InitSet(male_wrist=Male_wrst, female_wrist=Female_wrst,
+              tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
+# is2 = ModuleIS(male_wrist=Male_wrst, female_wrist=Female_wrst,
+#                tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
+# plo = is2.pipeloop(5)
 
 # x = Symbol("x")
-# minfndm0 = solve([(is1.male_wrist * is1.dif_hw * x ** 2) / 3 - v_male_sell], x)
-# minfndf0 = solve([(is1.female_wrist * is1.dif_hw * x ** 2) / 3 - v_female_sell], x)
+# minfndm0 = solve([(is1.male_wrist * is1.dif_hw * x ** 2) / 3 - is1.min_male_fnd()], x)
+# minfndf0 = solve([(is1.female_wrist * is1.dif_hw * x ** 2) / 3 - is1.min_female_fnd()], x)
 
-# print(minfndm0)
-# print(minfndf0)
+
 middlbrs = int((is1.min_male_fnd() + is1.min_female_fnd()) * 5)
 # lower cycle limit 10/1
 
 if __name__ == "__main__":
-    print(is1.min_male_fnd())
-    print(is1.min_female_fnd())
+    # print(minfndf0)
+    # print(minfndm0)
+    # print(plo)
     print(middlbrs)

@@ -45,17 +45,15 @@ class InitialSettings:
         return 180/self.circle_segment()
 
 
-is1 = InitialSettings(wrist_grip=150, number_seg=10)
-polygon_area = (is1.wrist_grip * 0.6) * (is1.wristH/2) * cos(radians(is1.apex_angle()))
-bracelet_area = is1.wristH**2 * phi + polygon_area
-
-for i in range(10, 25):
-    is2 = InitialSettings(wrist_grip=150, number_seg=i)
-    pa2 = (is2.wrist_grip*0.6) * (is2.wristH/2) * cos(radians(is2.apex_angle()))
-    ba2 = is2.wristH**2 * phi + pa2
-    print(ba2, is2.number_seg)
-    # print(is2.wrist_area)
-
 if __name__ == "__main__":
-    print(bracelet_area)
-    print(is1.wrist_area)
+    for i in range(10, 25):
+        is2 = InitialSettings(wrist_grip=150, number_seg=i)
+        pa2 = (is2.wrist_grip * 0.6) * (is2.wristH / 2) * cos(radians(is2.apex_angle()))
+        ba2 = is2.wristH ** 2 * phi + pa2
+        print(ba2, is2.number_seg)
+        # print(is2.wrist_area)
+        is1 = InitialSettings(wrist_grip=150, number_seg=10)
+        polygon_area = (is1.wrist_grip * 0.6) * (is1.wristH / 2) * cos(radians(is1.apex_angle()))
+        bracelet_area = is1.wristH ** 2 * phi + polygon_area
+        print(bracelet_area)
+        print(is1.wrist_area)
