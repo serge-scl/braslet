@@ -55,17 +55,17 @@ class ModuleIS(InitSet):
         x = Symbol("x")
         return solve([(x**3 * self.dif_hw)/3 - vl3], x)
 
-    def pipeloop2(self, r):
-        lp = r * 2 * pi
-        vl = lp * pi * self.rad_tub ** 2
-        vl3 = vl * 3
+    # def pipeloop2(self, r):
+    #     lp = r * 2 * pi
+    #     vl = lp * pi * self.rad_tub ** 2
+    #     vl3 = vl * 3
 
 
 is1 = InitSet(male_wrist=Male_wrst, female_wrist=Female_wrst,
               tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
-# is2 = ModuleIS(male_wrist=Male_wrst, female_wrist=Female_wrst,
-#                tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
-# plo = is2.pipeloop(5)
+is2 = ModuleIS(male_wrist=Male_wrst, female_wrist=Female_wrst,
+               tube=1.5, dif_hw=0.7, add_v_shell=4, kfv=3)
+
 
 # x = Symbol("x")
 # minfndm0 = solve([(is1.male_wrist * is1.dif_hw * x ** 2) / 3 - is1.min_male_fnd()], x)
@@ -78,5 +78,6 @@ middlbrs = int((is1.min_male_fnd() + is1.min_female_fnd()) * 5)
 if __name__ == "__main__":
     # print(minfndf0)
     # print(minfndm0)
-    # print(plo)
+    plo = is2.pipeloop(4)
+    print(plo)
     print(middlbrs)
