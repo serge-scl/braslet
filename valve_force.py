@@ -12,6 +12,7 @@ class InDim:
     suct_rad = 0.0025
     h_glove = 0.0001
     ribbnE = 500000
+    ohmmtr005 = 0.108
 
 
 class OutDim:
@@ -59,11 +60,35 @@ pwalv = PowValve(OutDim.pump_vcm, zsp, OutDim.hole, OutDim.gap)
 # n = number of turns in the solenoid
 # a = Area
 
-Area = InDim.suct_rad * OutDim.hole
-fup = pwalv.pic_pow_f()
-ni = sqrt(fup / (InDim.mgcons * Area / (2 * OutDim.gap**2)))
+
+class SolenoidValve:
+    def __init__(self, g, s, h):
+        self.gap = g
+        self.rad_l = s
+        self.rad_w = h
+
+    def area(self):
+        return self.rad_l * self.rad_w * 2
+
+    def ni(self):
+        fup = pwalv.pic_pow_f()
+        ni1 = sqrt(fup / (constants.mu_0 * self.area() / (2 * self.gap**2)))
+        return ni1
+
+    def wireohm(self):
+        lwr = (2 * self.rad_w + self.rad_l) * self.ni()
+        return lwr * InDim.ohmmtr005
+
+
+solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.hole)
+
+
+# Area = InDim.suct_rad * OutDim.hole * 2
+# fup = pwalv.pic_pow_f()
+# ni = sqrt(fup / (InDim.mgcons * Area / (2 * OutDim.gap**2)))
 
 if __name__ == "__main__":
     print(f"{zsp} membrane deflection")
     print(f"{pwalv.pic_pow_wt()}watt pic power 1 sec {pwalv.batter()}watt all power in batter")
-    print(ni)
+    print(solval.ni())
+    print(solval.wireohm())
