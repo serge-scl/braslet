@@ -12,7 +12,8 @@ class InDim:
     suct_rad = 0.0025
     h_glove = 0.0001
     ribbnE = 500000
-    ohmmtr005 = 0.108
+    ohmmtr00005 = 0.108
+    wire = 0.0001
 
 
 class OutDim:
@@ -20,14 +21,12 @@ class OutDim:
     pump_vcm = 75000
     hole = 0.001
     gap = 0.001
+    i_battr = 0.8
 
 
 def z_sphere(x):
     return 0.665 * InDim.suct_rad * ((x * InDim.suct_rad) /
                                      (InDim.ribbnE * InDim.h_glove)) ** (1 / 3)
-
-
-zsp = z_sphere(OutDim.pump_vcm)
 
 
 class PowValve:
@@ -54,8 +53,6 @@ class PowValve:
         return self.pic_pow_wt() * self.half * InDim.sucts_in_modl * OutDim.num_suct
 
 
-pwalv = PowValve(OutDim.pump_vcm, zsp, OutDim.hole, OutDim.gap)
-
 # F = (n * i)**2 * mgconst * a / (2 * gap**2)
 # n = number of turns in the solenoid
 # a = Area
@@ -66,20 +63,32 @@ class SolenoidValve:
         self.gap = g
         self.rad_l = s
         self.rad_w = h
+        self.b_sln = 0.003
+        self.w_flp = 0.003
+        self.w_pin = 0.001
 
-    def area(self):
-        return self.rad_l * self.rad_w * 2
+    def pinarea(self):
+        return self.w_flp * self.w_pin * 2
 
     def ni(self):
-        fup = pwalv.pic_pow_f()
-        ni1 = sqrt(fup / (constants.mu_0 * self.area() / (2 * self.gap**2)))
-        return ni1
+        zp = z_sphere(OutDim.pump_vcm)
+        pw = PowValve(OutDim.pump_vcm, zp, self.rad_w, self.gap)
+        fp = pw.pic_pow_f()
+        ni1 = sqrt(fp / (constants.mu_0 * self.pinarea() / (2 * self.gap ** 2)))
+        n2 = ni1 / OutDim.i_battr
+        return n2
 
     def wireohm(self):
-        lwr = (2 * self.rad_w + self.rad_l) * self.ni()
-        return lwr * InDim.ohmmtr005
+        lwr = (2 * (self.w_pin + self.w_flp)) * self.ni()
+        return lwr * InDim.ohmmtr00005
+
+    def wind_thick(self):
+        row = self.ni() * InDim.wire / self.b_sln
+        return row * InDim.wire
 
 
+zsp = z_sphere(OutDim.pump_vcm)
+pwalv = PowValve(OutDim.pump_vcm, zsp, OutDim.hole, OutDim.gap)
 solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.hole)
 
 
@@ -90,5 +99,6 @@ solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.hole)
 if __name__ == "__main__":
     print(f"{zsp} membrane deflection")
     print(f"{pwalv.pic_pow_wt()}watt pic power 1 sec {pwalv.batter()}watt all power in batter")
-    print(solval.ni())
-    print(solval.wireohm())
+    print(f"{solval.ni()} number turns magnet winding")
+    print(f"{solval.wireohm()} conductor resistance ")
+    print(f"{solval.wind_thick()} winding thickness")
