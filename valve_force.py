@@ -1,4 +1,19 @@
 # calculation of the effort of the electromagnetic semi-automatic valve of the suction cup
+'''  The development here concerns the operating conditions of the suction cup valve.
+In order for the vacuum in the suction cup to reliably grip the rubber of the glove
+and hold it at the required tension, a semi-automatic valve is needed in the suction cup itself.
+The valve opens on its own when air begins to be pumped out of the suction cup
+and then closes under the action of a spring,
+or if the pressure begins to increase what is inside the suction cup.
+However, according to the working conditions, this valve must also be forced to open.
+This is the process of returning atmospheric pressure to the inside of the suction cup
+ at the end of a job, or cleaning the system before gripping.
+In these two cases, the valve is driven by an electromagnet.
+Here are preliminary calculations of the number of turns in the electromagnet winding,
+power and, accordingly, the required dimensions.
+Suction cup dimensions from previous calculations, hemisphere with an inner diameter of 5 mm,
+the upper hole for a valve with a diameter of 2 mm.
+The pump power has been increased to -75 kPa. '''
 
 
 from scipy import constants
@@ -22,6 +37,8 @@ class OutDim:
     hole = 0.001
     gap = 0.001
     i_battr = 0.8
+    l_mgn = 0.005
+    w_mgn = 0.003
 
 
 def z_sphere(x):
@@ -64,7 +81,7 @@ class SolenoidValve:
         self.rad_l = s
         self.rad_w = h
         self.b_sln = 0.003
-        self.w_flp = 0.003
+        self.w_flp = OutDim.w_mgn
         self.w_pin = 0.001
 
     def pinarea(self):
@@ -86,10 +103,13 @@ class SolenoidValve:
         row = self.ni() * InDim.wire / self.b_sln
         return row * InDim.wire
 
+    def sol_h(self):
+        return 0.002 + 2 * self.wind_thick() + self.w_pin
+
 
 zsp = z_sphere(OutDim.pump_vcm)
 pwalv = PowValve(OutDim.pump_vcm, zsp, OutDim.hole, OutDim.gap)
-solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.hole)
+solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.gap)
 
 
 # Area = InDim.suct_rad * OutDim.hole * 2
@@ -97,8 +117,9 @@ solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.hole)
 # ni = sqrt(fup / (InDim.mgcons * Area / (2 * OutDim.gap**2)))
 
 if __name__ == "__main__":
-    print(f"{zsp} membrane deflection")
-    print(f"{pwalv.pic_pow_wt()}watt pic power 1 sec {pwalv.batter()}watt all power in batter")
-    print(f"{solval.ni()} number turns magnet winding")
-    print(f"{solval.wireohm()} conductor resistance ")
-    print(f"{solval.wind_thick()} winding thickness")
+    print(f"{round(zsp * 1000, 2)} mm membrane deflection")
+    print(f"{round(pwalv.pic_pow_wt() * 1000, 2)} mwt s {round(pwalv.batter(), 2)} wt batter")
+    print(f"{int(solval.ni())} turns magnet winding to {OutDim.i_battr}A")
+    print(f"{round(solval.wireohm(), 2)} ohm conductor resistance ")
+    print(f"{round(solval.wind_thick() * 1000)} mm winding")
+    print(f"magn DIM h {round(solval.sol_h() * 1000)} mm  ")
