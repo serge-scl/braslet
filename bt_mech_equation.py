@@ -18,7 +18,11 @@ The force created by the air pressure must overcome the spring resistance and fr
 # pz pump typ. volume flow v̇ (p=0) 20 ml/min (300 Hz)
 # typ. back pressure p (v̇ =0) 100 mbar (300 Hz)
 # m * (dv/dt) = P * S - Fspr + F3 - F3
+# ................................................................................
 # Fspr = k*L H/m
+# k=G*d**4/8*D**3*n
+# G shear modulus 1e9 Pa polypropylene, 117e6 Pa polyethylene
+# spring D 9 - 10 mm, L 9 mm, d 1.5 - 2 mm
 
 
 from wrist import Male_wrst, Female_wrst, pHi
@@ -28,10 +32,16 @@ from scipy import constants
 Male_wrst_open = Male_wrst * pHi
 Frmale_wrst_open = Female_wrst * pHi
 
+
 k = 1.4  # k - adiabatic exponent (Poisson's ratio)
 Tm = 293  # T kelvin temperature
 R_atm = 287  # R_atm  air constant
 Pip_resist = 30
+D_spr = 0.01
+d_wr = 0.0015
+polypropylene = 1e9
+polyethylene = 117e6
+pomp_pow = 75000  # KPa
 
 # flow function for gas pressure
 # def exp_funct(x):
@@ -62,7 +72,7 @@ def f_p(d):
 
 def gas_f_rate(f, p):
     pm0 = pm(p)
-    g_kg = (f * 30000) / sqrt(Tm * R_atm * Pip_resist) * sqrt(1 - (f_beta(pm0)) ** 2)
+    g_kg = (f * pomp_pow) / sqrt(Tm * R_atm * Pip_resist) * sqrt(1 - (f_beta(pm0)) ** 2)
     return g_kg / 1.205
 
 
@@ -74,28 +84,24 @@ def res_vs_act():
     return rat
 
 
-# k=G*d**4/8*D**3*n
-# spring D 9 - 10 mm, L 9 mm, d 1.5 - 2 mm
-# G shear modulus 1e9 Pa polypropylene, 117e6 Pa polyethylene
-
-
-def stiffness_coefficient(g):
-    k_h_sp = g * 0.0015**4/(8 * 0.01**3)
-    return k_h_sp
-
-
 f_act = 0.0018**2 * pi * 3 * 60000
 
 
 fp = f_p(0.5)
-pm1 = pm(30000)
-gfr = gas_f_rate(fp, 30e3)
-plast1 = stiffness_coefficient(1e9)
-plast2 = stiffness_coefficient(117e6)
+pm1 = pm(pomp_pow)
+gfr = gas_f_rate(fp, pomp_pow)
 
 
-# print(res_vs_act())
-print(plast1 * 0.005 * 0.5)
-print(plast2 * 0.005 * 0.5)
-print(f_act)
-# print(gfr * (100**3))
+def stiffness_k(g, dw, dt):
+    return g * dw**4/(8 * dt**3)
+
+
+f_pl = stiffness_k(polyethylene, d_wr, D_spr) * 0.005
+f_plp = stiffness_k(polypropylene, d_wr, D_spr) * 0.005
+
+
+if __name__ == "__main__":
+    print(f"power stretch polyethylene tube {round(f_pl, 2)} H")
+    print(f"power stretch polypropylene tube {round(f_plp, 2)} H")
+    # print(f_act)
+    # print(gfr * (100**3))

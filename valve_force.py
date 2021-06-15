@@ -1,5 +1,5 @@
 # calculation of the effort of the electromagnetic semi-automatic valve of the suction cup
-'''  The development here concerns the operating conditions of the suction cup valve.
+"""  The development here concerns the operating conditions of the suction cup valve.
 In order for the vacuum in the suction cup to reliably grip the rubber of the glove
 and hold it at the required tension, a semi-automatic valve is needed in the suction cup itself.
 The valve opens on its own when air begins to be pumped out of the suction cup
@@ -13,7 +13,7 @@ Here are preliminary calculations of the number of turns in the electromagnet wi
 power and, accordingly, the required dimensions.
 Suction cup dimensions from previous calculations, hemisphere with an inner diameter of 5 mm,
 the upper hole for a valve with a diameter of 2 mm.
-The pump power has been increased to -75 kPa. '''
+The pump power has been increased to -75 kPa. """
 
 
 from scipy import constants
@@ -21,18 +21,16 @@ from numpy import pi, sqrt
 
 
 class InDim:
+    num_suct = 12
     mgcons = constants.mu_0
-    sucts_in_modl = 2
-    modl_ln = 0.025
     suct_rad = 0.0025
     h_glove = 0.0001
-    ribbnE = 500000
-    ohmmtr00005 = 0.108
-    wire = 0.0001
+    ribbnE = 500000  # Pa
+    ohmmtr00005 = 9.29
+    wire = 0.00005
 
 
 class OutDim:
-    num_suct = 6
     pump_vcm = 75000
     hole = 0.001
     gap = 0.001
@@ -67,7 +65,7 @@ class PowValve:
         return self.suct * self.pump * self.diff() * self.gap
 
     def batter(self):
-        return self.pic_pow_wt() * self.half * InDim.sucts_in_modl * OutDim.num_suct
+        return self.pic_pow_wt() * self.half  * InDim.num_suct
 
 
 # F = (n * i)**2 * mgconst * a / (2 * gap**2)
@@ -121,5 +119,5 @@ if __name__ == "__main__":
     print(f"{round(pwalv.pic_pow_wt() * 1000, 2)} mwt s {round(pwalv.batter(), 2)} wt batter")
     print(f"{int(solval.ni())} turns magnet winding to {OutDim.i_battr}A")
     print(f"{round(solval.wireohm(), 2)} ohm conductor resistance ")
-    print(f"{round(solval.wind_thick() * 1000)} mm winding")
+    print(f"{round(solval.wind_thick() * 1000, 2)} mm winding")
     print(f"magn DIM h {round(solval.sol_h() * 1000)} mm  ")

@@ -71,7 +71,7 @@ def buff_tank(h, fx):
     for i2 in range(1,h):
         for i3 in range(1, fx):
             lbt2 = l_buff_tank(i2, i3, 1)
-            yield f"l buff {lbt2} h buff {i2} w buff {(25 - i3)/2} w fix {i3}"
+            yield f"l buff {round(lbt2, 1)} h buff {i2} w buff {(25 - i3)/2} w fix {i3}"
 
 
 vcps = vcupsuch(75, 101)
