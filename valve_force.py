@@ -1,4 +1,4 @@
-# calculation of the effort of the electromagnetic semi-automatic valve of the suction cup
+# calculation of the effort of the electromagnetic semi-automatic
 """  The development here concerns the operating conditions of the suction cup valve.
 In order for the vacuum in the suction cup to reliably grip the rubber of the glove
 and hold it at the required tension, a semi-automatic valve is needed in the suction cup itself.
@@ -11,6 +11,8 @@ This is the process of returning atmospheric pressure to the inside of the sucti
 In these two cases, the valve is driven by an electromagnet.
 Here are preliminary calculations of the number of turns in the electromagnet winding,
 power and, accordingly, the required dimensions.
+The voltage and current applied to the electromagnet can represent a stream of pulses.
+The frequency should be selected in such a way that it would be better to open the valve.
 Suction cup dimensions from previous calculations, hemisphere with an inner diameter of 5 mm,
 the upper hole for a valve with a diameter of 2 mm.
 The pump power has been increased to -75 kPa. """
@@ -34,7 +36,7 @@ class OutDim:
     pump_vcm = 75000
     hole = 0.001
     gap = 0.001
-    i_battr = 0.8
+    i_battr = 0.2
     l_mgn = 0.005
     w_mgn = 0.003
 
