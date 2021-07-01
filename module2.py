@@ -15,12 +15,12 @@ from numpy import pi, arccos, degrees
 from valve_force import InDim
 from bt_mech_equation import D_spr, d_wr
 
-exe_chamber = 0.008
+exe_chamber = 0.006
 spring_ind = D_spr/d_wr
 male_wrist = Mwr / 1000  # mm to m
 female_wrist = Fmwr / 1000
 nmb_s = InDim.num_suct
-h_suct = InDim.suct_rad * 2 + 0.0005
+h_suct = InDim.suct_rad * 2 + 0.001
 
 
 def between_suct(x):

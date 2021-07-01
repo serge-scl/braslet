@@ -15,7 +15,7 @@ The voltage and current applied to the electromagnet can represent a stream of p
 The frequency should be selected in such a way that it would be better to open the valve.
 Suction cup dimensions from previous calculations, hemisphere with an inner diameter of 5 mm,
 the upper hole for a valve with a diameter of 2 mm.
-The pump power has been increased to -75 kPa. """
+The pump power has been increased to -10 kPa. """
 
 
 from scipy import constants
@@ -25,7 +25,7 @@ from numpy import pi, sqrt
 class InDim:
     num_suct = 12
     mgcons = constants.mu_0
-    suct_rad = 0.0025
+    suct_rad = 0.0042
     h_glove = 0.0001
     ribbnE = 500000  # Pa
     ohmmtr00005 = 9.29
@@ -33,12 +33,13 @@ class InDim:
 
 
 class OutDim:
-    pump_vcm = 75000
-    hole = 0.001
+    pump_vcm = 10000
+    hole = 0.0005
     gap = 0.001
-    i_battr = 0.2
+    i_battr = 0.1
     l_mgn = 0.005
     w_mgn = 0.003
+    pin_mgn = 0.001
 
 
 def z_sphere(x):
@@ -67,7 +68,7 @@ class PowValve:
         return self.suct * self.pump * self.diff() * self.gap
 
     def batter(self):
-        return self.pic_pow_wt() * self.half  * InDim.num_suct
+        return self.pic_pow_wt() * self.half * InDim.num_suct
 
 
 # F = (n * i)**2 * mgconst * a / (2 * gap**2)
@@ -80,9 +81,9 @@ class SolenoidValve:
         self.gap = g
         self.rad_l = s
         self.rad_w = h
-        self.b_sln = 0.003
         self.w_flp = OutDim.w_mgn
-        self.w_pin = 0.001
+        self.w_pin = OutDim.pin_mgn
+        self.b_sln = OutDim.l_mgn - (OutDim.pin_mgn * 2)
 
     def pinarea(self):
         return self.w_flp * self.w_pin * 2
