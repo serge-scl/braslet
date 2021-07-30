@@ -1,0 +1,71 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MCU_ST_STM32F4:STM32F401CCFx U1
+U 1 1 610064C6
+P 5775 3675
+F 0 "U1" H 5775 5456 50  0000 C CNN
+F 1 "STM32F401CCFx" H 5775 5365 50  0000 C CNN
+F 2 "Package_CSP:ST_WLCSP-49_Die423" H 5275 2075 50  0001 R CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00086815.pdf" H 5775 3675 50  0001 C CNN
+	1    5775 3675
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:AMS1117-3.3 U2
+U 1 1 61014B87
+P 4175 1950
+F 0 "U2" H 4175 2192 50  0000 C CNN
+F 1 "AMS1117-3.3" H 4175 2101 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 4175 2150 50  0001 C CNN
+F 3 "http://www.advanced-monolithic.com/pdf/ds1117.pdf" H 4275 1700 50  0001 C CNN
+	1    4175 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:USB_B_Micro J1
+U 1 1 6101668A
+P 2750 1975
+F 0 "J1" H 2807 2442 50  0000 C CNN
+F 1 "USB_B_Micro" H 2807 2351 50  0000 C CNN
+F 2 "Connector_USB:USB_Micro-B_Wuerth_614105150721_Vertical" H 2900 1925 50  0001 C CNN
+F 3 "~" H 2900 1925 50  0001 C CNN
+	1    2750 1975
+	1    0    0    -1  
+$EndComp
+$Comp
+L TMAG5273Hall:tmag5273 U3
+U 1 1 610194D7
+P 3250 6075
+F 0 "U3" H 3200 6550 50  0000 C CNN
+F 1 "tmag5273" H 3200 6459 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 3250 6075 50  0001 C CNN
+F 3 "" H 3250 6075 50  0001 C CNN
+	1    3250 6075
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_FET:BF545C Q1
+U 1 1 61032CC8
+P 3750 3050
+F 0 "Q1" H 3940 3096 50  0000 L CNN
+F 1 "BF545C" H 3940 3005 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3950 2975 50  0001 L CIN
+F 3 "https://www.nxp.com/docs/en/data-sheet/BF545A_BF545B_BF545C.pdf" H 3750 3050 50  0001 L CNN
+	1    3750 3050
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

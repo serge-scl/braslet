@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name TMAG5273Hall)(type Legacy)(uri ${KIPRJMOD}/TMAG5273Hall.lib)(options "")(descr ""))
+)
