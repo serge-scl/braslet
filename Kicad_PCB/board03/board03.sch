@@ -112,8 +112,8 @@ $Comp
 L L_core_valv:L_core_v L1
 U 1 1 61045340
 P 7400 4375
-F 0 "L1" H 7736 4433 50  0000 L CNN
-F 1 "L_core_v" H 7736 4342 50  0000 L CNN
+F 0 "L1" H 7425 4100 50  0000 L CNN
+F 1 "L_core_v" H 7400 4700 50  0000 L CNN
 F 2 "L_Core_vlv:L_core_v" H 7400 4375 50  0001 C CNN
 F 3 "" H 7400 4375 50  0001 C CNN
 	1    7400 4375
@@ -129,5 +129,16 @@ F 2 "cap_touch:capS" H 3950 3300 50  0001 C CNN
 F 3 "" H 3850 3450 50  0001 C CNN
 	1    3850 3450
 	-1   0    0    -1  
+$EndComp
+$Comp
+L sens_vlt:sensV U4
+U 1 1 61059F3E
+P 3925 4150
+F 0 "U4" H 3883 4425 50  0000 C CNN
+F 1 "sensV" H 3883 4334 50  0000 C CNN
+F 2 "sensorVlt:SensV" H 3925 4150 50  0001 C CNN
+F 3 "" H 3925 4150 50  0001 C CNN
+	1    3925 4150
+	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
