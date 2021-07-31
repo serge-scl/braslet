@@ -179,6 +179,19 @@ X G 3 -200 0 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
+# cup_touch_captouch
+#
+DEF cup_touch_captouch C 0 40 Y Y 1 F N
+F0 "C" -50 -100 50 H V C CNN
+F1 "cup_touch_captouch" 50 100 50 H V C CNN
+F2 "cap_touch:capS" 100 -150 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+C 50 0 50 0 1 0 N
+X ct 1 -100 0 100 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
 # dk_LED-Indication-Discrete_LG_R971-KN-1
 #
 DEF dk_LED-Indication-Discrete_LG_R971-KN-1 D 0 0 Y Y 1 F N

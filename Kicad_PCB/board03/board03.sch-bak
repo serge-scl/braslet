@@ -109,12 +109,12 @@ F 12 "Active" H 9225 4500 60  0001 L CNN "Status"
 	1    0    0    -1  
 $EndComp
 $Comp
-L L_core_valv:L_core_v L
+L L_core_valv:L_core_v L1
 U 1 1 61045340
 P 7400 4375
-F 0 "L" H 7736 4433 50  0000 L CNN
+F 0 "L1" H 7736 4433 50  0000 L CNN
 F 1 "L_core_v" H 7736 4342 50  0000 L CNN
-F 2 "" H 7400 4375 50  0001 C CNN
+F 2 "L_Core_vlv:L_core_v" H 7400 4375 50  0001 C CNN
 F 3 "" H 7400 4375 50  0001 C CNN
 	1    7400 4375
 	1    0    0    -1  

@@ -119,4 +119,15 @@ F 3 "" H 7400 4375 50  0001 C CNN
 	1    7400 4375
 	1    0    0    -1  
 $EndComp
+$Comp
+L cup_touch:captouch C1
+U 1 1 61056B2A
+P 3850 3450
+F 0 "C1" H 3863 3675 50  0000 C CNN
+F 1 "captouch" H 3863 3584 50  0000 C CNN
+F 2 "cap_touch:capS" H 3950 3300 50  0001 C CNN
+F 3 "" H 3850 3450 50  0001 C CNN
+	1    3850 3450
+	-1   0    0    -1  
+$EndComp
 $EndSCHEMATC
