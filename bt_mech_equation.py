@@ -19,34 +19,45 @@ The force created by the air pressure must overcome the spring resistance and fr
 
 from wrist import Male_wrst, Female_wrst, pHi
 from math import sqrt
-from scipy.constants import atm
+from scipy.constants import atm, g, pi
 
 
 Male_wrst_open = Male_wrst * pHi
 Frmale_wrst_open = Female_wrst * pHi
 
-k = 1.4  # k - adiabatic exponent (Poisson's ratio)
-Tk = 273  # T kelvin temperature 0 Tc
-R_atm = 287  # R_atm  air constant
+
+class Const:
+    k = 1.4  # k - adiabatic exponent (Poisson's ratio)
+    Tk = 273  # T kelvin temperature 0 Tc
+    R = 287  # R_atm  air constant
+    v = 0.816  # specific volume of gas
 
 
-# flow function for gas pressure
-def exp_funct(x):
-    if x <= 0.528:
-        return 0.259
-    elif x >= 0.528:
-        b1 = x**(2/k)
-        b2 = x**((k+1)/k)
-        return sqrt(b1 - b2)
+class GasFlow:
+    def __init__(self, p, s, pn=atm):
+        self.v = Const.v
+        self.p = p * atm
+        self.pn = pn
+        self.beta = self.pn/self.p
+        self.s = s
+
+    def exp_f(self):
+        if self.beta <= 0.528:
+            return 0.259
+        elif self.beta > 0.528:
+            b1 = self.beta**(2/Const.k)
+            b2 = self.beta**((Const.k+1)/Const.k)
+            return sqrt(b1 - b2)
+
+    def G(self):
+        return self.s * sqrt(((2 * g * Const.k * self.p) /
+                              ((Const.k - 1) * self.v)) * self.exp_f())
 
 
-def pm(p):
-    return p + atm
+s_hole = 0.0005**2 * pi
 
-
-def f_beta(b):
-    return atm/b
-
+eft = GasFlow(2, s_hole)
 
 if __name__ == "__main__":
-    pass
+    print(f"{round(eft.G(), 5)} kg/s gas flow through a hole: {round(s_hole* 10e6,3)} mm2,"
+          f" unverified formula")
