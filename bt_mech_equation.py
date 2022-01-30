@@ -17,29 +17,31 @@ The force created by the air pressure must overcome the spring resistance and fr
 # polyethylene = 117e6
 
 
-from wrist import Male_wrst, Female_wrst, pHi
+from wrist import Male_wrst, Female_wrst
 from math import sqrt
-from scipy.constants import atm, g, pi
+from scipy.constants import atm, pi, golden  # R , g, k
 
 
-Male_wrst_open = Male_wrst * pHi
-Frmale_wrst_open = Female_wrst * pHi
+Male_wrst_open = Male_wrst * golden
+Frmale_wrst_open = Female_wrst * golden
 
 
 class Const:
-    k = 1.4  # k - adiabatic exponent (Poisson's ratio)
+    k = 1.4  # adiabatic exponent  https://en.wikipedia.org/wiki/Heat_capacity_ratio
     Tk = 273  # T kelvin temperature 0 Tc
-    R = 287  # R_atm  air constant
-    v = 0.816  # specific volume of gas
+    Ra = 287  # R_atm  air constant
+    ro = 1.205  # kg/m3
+    v = 0.816  # m3/kg
+    a = 343  # m/sec
 
 
 class GasFlow:
-    def __init__(self, p, s, pn=atm):
+    def __init__(self, p, d, pn=atm):
         self.v = Const.v
         self.p = p * atm
         self.pn = pn
         self.beta = self.pn/self.p
-        self.s = s
+        self.s = (d/2)**2 * pi
 
     def exp_f(self):
         if self.beta <= 0.528:
@@ -49,15 +51,23 @@ class GasFlow:
             b2 = self.beta**((Const.k+1)/Const.k)
             return sqrt(b1 - b2)
 
-    def G(self):
-        return self.s * sqrt(((2 * g * Const.k * self.p) /
-                              ((Const.k - 1) * self.v)) * self.exp_f())
+    def gf1(self):
+        return self.s * Const.a * Const.ro
+
+    def gf2(self):
+        return self.s * (self.p - self.pn) * sqrt((2 * Const.k) /
+                                                  (Const.Ra * (Const.Tk + 20) * (Const.k - 1))) * self.exp_f()
 
 
-s_hole = 0.0005**2 * pi
+d_hole = 0.001
 
-eft = GasFlow(2, s_hole)
+eft = GasFlow(2.7, d_hole)
 
 if __name__ == "__main__":
-    print(f"{round(eft.G(), 5)} kg/s gas flow through a hole: {round(s_hole* 10e6,3)} mm2,"
-          f" unverified formula")
+    print(f"{round(eft.gf1() * 1000, 5)} g/s gas flow hole D: {round(d_hole * 1000, 3)} mm, fwp")
+    print(f"{round(eft.gf2() * 1000, 5)} g/s gas flow  hole D: {round(d_hole * 1000, 3)} mm, beta*")
+    print(f"{round(eft.gf2() * Const.v * 10e5 , 5)} cm3/s gas flow  hole D: {round(d_hole * 1000, 3)} mm, beta*")
+    for i in range(11, 40, 1):
+        i01 = i / 10
+        efts = GasFlow(i01, d_hole)
+        print(f"{round(efts.gf1() * 1000, 5)} fwp,{round(efts.gf2() * 1000, 5)} beta g/s  {i01} atm,")
