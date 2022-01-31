@@ -22,10 +22,6 @@ from math import sqrt
 from scipy.constants import atm, pi, golden  # R , g, k
 
 
-Male_wrst_open = Male_wrst * golden
-Frmale_wrst_open = Female_wrst * golden
-
-
 class Const:
     k = 1.4  # adiabatic exponent  https://en.wikipedia.org/wiki/Heat_capacity_ratio
     Tk = 273  # T kelvin temperature 0 Tc
@@ -59,15 +55,40 @@ class GasFlow:
                                                   (Const.Ra * (Const.Tk + 20) * (Const.k - 1))) * self.exp_f()
 
 
-d_hole = 0.001
+class PneumAct:
+    def __init__(self, x):
+        self.wrst = x/1000  # mm to m
+        self.wrst_inf = self.wrst * golden
+        self.n_modl = 12
+        self.n_pill = 3
+        self.d_pill = 0.009
+        self.h_chamb = 0.02
+        self.ln_chamb = 0.02
 
-eft = GasFlow(2.7, d_hole)
+    def top_ring(self):
+        return self.wrst_inf + self.h_chamb * 2 * pi
+
+    def w_chamb(self):
+        return self.top_ring() / self.n_modl - self.d_pill * self.n_pill
+
+    def v_ring(self):
+        ln = 0.002
+        h = 0.001
+        act = (self.d_pill/2)**2 * pi * self.ln_chamb * self.n_pill
+        chamb_pip = self.w_chamb() * ln * h
+        return (act + chamb_pip) * self.n_modl
+
+
+pa = PneumAct(Male_wrst)
+pa2 = PneumAct(Female_wrst)
 
 if __name__ == "__main__":
-    print(f"{round(eft.gf1() * 1000, 5)} g/s gas flow hole D: {round(d_hole * 1000, 3)} mm, fwp")
-    print(f"{round(eft.gf2() * 1000, 5)} g/s gas flow  hole D: {round(d_hole * 1000, 3)} mm, beta*")
-    print(f"{round(eft.gf2() * Const.v * 10e5 , 5)} cm3/s gas flow  hole D: {round(d_hole * 1000, 3)} mm, beta*")
+    print(f"vacuum chamber width {round((pa.w_chamb()) * 1000, 2)} mm")
+    print(f"actuator ring {round(pa.v_ring() * 10e5)} cm3 ")
+
     for i in range(11, 40, 1):
+        d_choke = 0.001  # 1 mm hole in choke
         i01 = i / 10
-        efts = GasFlow(i01, d_hole)
-        print(f"{round(efts.gf1() * 1000, 5)} fwp,{round(efts.gf2() * 1000, 5)} beta g/s  {i01} atm,")
+        efts = GasFlow(i01, d_choke)
+        print(f" fwp {round(efts.gf1() * 1000, 5)},beta* {round(efts.gf2() * 1000, 5)} g/s"
+              f"  V fill {round(pa.v_ring() * Const.ro/efts.gf2(), 2)} sec, {i01} atm")
