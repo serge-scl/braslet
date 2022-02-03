@@ -29,6 +29,8 @@ class Const:
     ro = 1.205  # kg/m3
     v = 0.816  # m3/kg
     a = 343  # m/sec
+    plpr = 1e9  # polypropylene
+    plt = 117e6  # polyethylene
 
 
 class GasFlow:
@@ -56,7 +58,8 @@ class GasFlow:
 
 
 class PneumAct:
-    def __init__(self, x):
+
+    def __init__(self, x, g):
         self.wrst = x/1000  # mm to m
         self.wrst_inf = self.wrst * golden
         self.n_modl = 12
@@ -64,31 +67,46 @@ class PneumAct:
         self.d_pill = 0.009
         self.h_chamb = 0.02
         self.ln_chamb = 0.02
+        self.mg = g
+
+    def compress_ring(self):
+        return self.wrst + 2 * self.h_chamb * pi
 
     def top_ring(self):
-        return self.wrst_inf + self.h_chamb * 2 * pi
+        return self.wrst_inf + 2 * self.h_chamb * pi
 
     def w_chamb(self):
         return self.top_ring() / self.n_modl - self.d_pill * self.n_pill
 
+    def f_spring(self):
+        # Fspr = k*L H/m
+        # k=G*d**4/8*D**3*n
+        l_dspr = self.top_ring() - self.compress_ring()
+        d_coil = 0.01
+        d_wr = 0.002
+        k_spr = self.mg * d_wr**4/(8 * d_coil**3 * self.n_modl)
+        f_spr = k_spr * l_dspr
+        return f_spr / (pa.w_chamb() * pa.d_pill * pa.n_modl)
+
     def v_ring(self):
-        ln = 0.002
-        h = 0.001
+        ln = 0.002  # connecting tube length
+        h = 0.001  # connection tube height
         act = (self.d_pill/2)**2 * pi * self.ln_chamb * self.n_pill
         chamb_pip = self.w_chamb() * ln * h
         return (act + chamb_pip) * self.n_modl
 
 
-pa = PneumAct(Male_wrst)
-pa2 = PneumAct(Female_wrst)
+pa = PneumAct(Male_wrst, Const.plpr)
+pa2 = PneumAct(Female_wrst, Const.plpr)
 
 if __name__ == "__main__":
+    print(f" spring back pressure {round(pa.f_spring()/ 1000, 3)} kPa")
     print(f"vacuum chamber width {round((pa.w_chamb()) * 1000, 2)} mm")
     print(f"actuator ring {round(pa.v_ring() * 10e5)} cm3 ")
 
-    for i in range(11, 40, 1):
+    for i in range(30, 40, 1):
         d_choke = 0.001  # 1 mm hole in choke
         i01 = i / 10
-        efts = GasFlow(i01, d_choke)
+        efts = GasFlow(i01, d_choke, atm+pa.f_spring())
         print(f" fwp {round(efts.gf1() * 1000, 5)},beta* {round(efts.gf2() * 1000, 5)} g/s"
               f"  V fill {round(pa.v_ring() * Const.ro/efts.gf2(), 2)} sec, {i01} atm")
