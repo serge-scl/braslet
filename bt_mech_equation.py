@@ -7,19 +7,11 @@ The force created by the air pressure must overcome the spring resistance and fr
  In turn, tensile force is added to the frictional forces as the entire bracelet
   expands and stretches the edges of the medical glove. """
 
-# Fspr = k*L H/m
-# k=G*d**4/8*D**3*n
-# G shear modulus 1e9 Pa polypropylene, 117e6 Pa polyethylene
-# spring D 9 - 10 mm, L 9 mm, d 1.5 - 2 mm
-# D_spr = 0.01
-# d_wr = 0.0015
-# polypropylene = 1e9
-# polyethylene = 117e6
-
 
 from wrist import Male_wrst, Female_wrst
 from math import sqrt
-from scipy.constants import atm, pi, golden  # R , g, k
+from scipy.constants import atm, pi  # R , g, k, golden
+from valve_force import InDim
 
 
 class Const:
@@ -31,6 +23,8 @@ class Const:
     a = 343  # m/sec
     plpr = 1e9  # polypropylene
     plt = 117e6  # polyethylene
+    h_chamb = 0.02
+    ln_chamb = 0.02
 
 
 class GasFlow:
@@ -61,13 +55,15 @@ class PneumAct:
 
     def __init__(self, x, g):
         self.wrst = x/1000  # mm to m
-        self.wrst_inf = self.wrst * golden
+        self.wrst_inf = self.wrst * 2
         self.n_modl = 12
         self.n_pill = 3
         self.d_pill = 0.009
-        self.h_chamb = 0.02
-        self.ln_chamb = 0.02
-        self.mg = g
+        self.h_chamb = Const.h_chamb
+        self.ln_chamb = Const.ln_chamb
+        self.mg = g  # shear module
+        self.ln_p = 0.002  # connecting tube length
+        self.h_p = 0.001  # connection tube height
 
     def compress_ring(self):
         return self.wrst + 2 * self.h_chamb * pi
@@ -89,24 +85,59 @@ class PneumAct:
         return f_spr / (pa.w_chamb() * pa.d_pill * pa.n_modl)
 
     def v_ring(self):
-        ln = 0.002  # connecting tube length
-        h = 0.001  # connection tube height
         act = (self.d_pill/2)**2 * pi * self.ln_chamb * self.n_pill
-        chamb_pip = self.w_chamb() * ln * h
+        chamb_pip = self.w_chamb() * self.ln_p * self.h_p
         return (act + chamb_pip) * self.n_modl
+
+    def v_compress_ring(self):
+        w_pip = (self.compress_ring()/12 - self.w_chamb()) / self.n_pill
+        cact = (w_pip/2) * (self.d_pill/2) * pi * self.ln_chamb * self.n_pill
+        chamb_pip = self.w_chamb() * self.ln_p * self.h_p
+        return (cact + chamb_pip) * self.n_modl
+
+
+class VacuumChamber:
+    def __init__(self, w, wsl):
+        self.w_chamb = w
+        self.h_chamb = Const.h_chamb
+        self.ln_chamb = Const.ln_chamb
+        self.shell = 0.001
+        self.wsl = wsl
+        self.suct_cup = InDim.suct_rad
+
+    def v_solenoid(self):
+        lnsl = self.w_chamb - self.shell * 2
+        sch = self.suct_cup + self.shell  # suction cup height
+        hsl = self.h_chamb - (sch + self.shell * 2)
+        return lnsl * hsl * self.wsl
+
+    def free_v_chamb(self):
+        ins_h = self.h_chamb - self.shell
+        ins_ln = self.ln_chamb - self.shell
+        ins_w = self.w_chamb - self.shell
+        return ins_h * ins_ln * ins_w - self.v_solenoid()
+
+    def work_suct_cup(self):
+        return (4 * pi * self.suct_cup**3) / 6
 
 
 pa = PneumAct(Male_wrst, Const.plpr)
 pa2 = PneumAct(Female_wrst, Const.plpr)
+efts2 = GasFlow(1.2, 0.001)
+vch = VacuumChamber(pa.w_chamb(), 0.005)
 
 if __name__ == "__main__":
-    print(f" spring back pressure {round(pa.f_spring()/ 1000, 3)} kPa")
     print(f"vacuum chamber width {round((pa.w_chamb()) * 1000, 2)} mm")
-    print(f"actuator ring {round(pa.v_ring() * 10e5)} cm3 ")
+    print(f"free space in the vacuum chamber {round(vch.free_v_chamb() * 1e6,2)} sm3,"
+          f" cup {round(vch.work_suct_cup() * 1e6,2)} sm3")
+    print(f" pressure relief {round(efts2.gf2() * 1000,5)} g/s"
+          f" {round((pa.v_ring() - pa.v_compress_ring()) * Const.ro/efts2.gf2(), 4)} sec")
+    print(f" spring back pressure {round(pa.f_spring()/ 1000, 3)} kPa")
+    print(f"V ring: max{round(pa.v_ring() * 1e6,1)}, min{round(pa.v_compress_ring() * 1e6,1)} cm3 ")
 
-    for i in range(30, 40, 1):
-        d_choke = 0.001  # 1 mm hole in choke
-        i01 = i / 10
-        efts = GasFlow(i01, d_choke, atm+pa.f_spring())
-        print(f" fwp {round(efts.gf1() * 1000, 5)},beta* {round(efts.gf2() * 1000, 5)} g/s"
-              f"  V fill {round(pa.v_ring() * Const.ro/efts.gf2(), 2)} sec, {i01} atm")
+    # for i in range(30, 40, 1):
+    #     d_choke = 0.001  # 1 mm hole in choke
+    #     i01 = i / 10
+    #     efts = GasFlow(i01, d_choke, atm+pa.f_spring())
+    #     print(f" fwp {round(efts.gf1() * 1000, 5)},beta* {round(efts.gf2() * 1000, 5)} g/s"
+    #           f"  V fill {round((pa.v_ring() - pa.v_compress_ring()) * Const.ro/efts.gf2(), 4)} sec, {i01} atm")
