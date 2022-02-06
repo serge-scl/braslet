@@ -42,8 +42,9 @@ class OutDim:
     pin_mgn = 0.001
 
 
+# https://engineeringlibrary.org/reference/membranes-air-force-stress-manual
 def z_sphere(x):
-    return 0.665 * InDim.suct_rad * ((x * InDim.suct_rad) /
+    return 0.662 * InDim.suct_rad * ((x * InDim.suct_rad) /
                                      (InDim.ribbnE * InDim.h_glove)) ** (1 / 3)
 
 
