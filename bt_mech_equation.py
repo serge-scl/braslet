@@ -11,7 +11,6 @@ The force created by the air pressure must overcome the spring resistance and fr
 from wrist import Male_wrst, Female_wrst
 from math import sqrt
 from scipy.constants import atm, pi  # R , g, k, golden
-from valve_force import InDim  # z_sphere
 
 
 class Const:
@@ -21,8 +20,10 @@ class Const:
     ro = 1.205  # kg/m3 air
     v = 0.816  # m3/kg air
     a = 343  # m/sec sound
-    plpr = 1e9  # polypropylene
-    plt = 117e6  # polyethylene
+    stl = 81e9  # steel shear modulus
+    plpr = 1e9  # polypropylene shear modulus
+    plt = 117e6  # polyethylene shear modulus
+    rib_E = 855000  # nitrile modulus of elasticity
     cr_beta = 0.526  # critical σ*
     cr_beta_f = 0.259  # flow rate function φ(σ)*
 
@@ -58,12 +59,21 @@ class MyConst(Const):
     vltd = 0.001  # vacuum line tube diameter
     dpsh = 0.009  # diameter of the pneumatic drive section of the pill shape
     nsom = 3  # number of sections in one module
-    nofm = InDim.num_suct  # number of modules
+    nofm = 12  # number of modules
     wcht = 0.001  # vacuum chamber wall thickness
     acth = 0.001  # actuator connection tube height
     actw = 0.002  # actuator connection tube width
     scw = 0.005  # solenoid core width
     dpsr = 0.001  # diameter of the pressure supply pipe from the receiver
+    glove_th = 0.0001  # glove rubber thickness
+    suct_rad = 0.0042  # suction ring radius
+
+
+# Fspr = k*L H/m
+# k=G*d**4/8*D**3*n
+def spring_f(g, d, c, n, dl):
+    k = g * d**4 / (8 * c**3 * n)
+    return k * dl
 
 
 class PneumAct:
@@ -90,14 +100,11 @@ class PneumAct:
         return self.top_ring() / self.n_modl - self.d_pill * self.n_pill
 
     def f_spring(self):
-        # Fspr = k*L H/m
-        # k=G*d**4/8*D**3*n
         l_dspr = self.top_ring() - self.compress_ring()
         d_coil = MyConst.vlcd
         d_wr = MyConst.vltd
-        k_spr = self.mg * d_wr**4/(8 * d_coil**3 * self.n_modl)
-        f_spr = k_spr * l_dspr
-        return f_spr / (pa.w_chamb() * pa.d_pill * pa.n_modl)
+        spr_f = spring_f(self.mg, d_wr, d_coil, self.n_modl, l_dspr)
+        return spr_f / (pa.w_chamb() * pa.d_pill * pa.n_modl)
 
     def v_ring(self):
         act = (self.d_pill/2)**2 * pi * self.ln_chamb * self.n_pill
@@ -118,7 +125,7 @@ class VacuumChamber:
         self.ln_chamb = MyConst.ln_chamb
         self.shell = MyConst.wcht
         self.wsl = wsl
-        self.suct_cup = InDim.suct_rad
+        self.suct_cup = MyConst.nofm
 
     def v_solenoid(self):
         lnsl = self.w_chamb - self.shell * 2
@@ -150,6 +157,7 @@ if __name__ == "__main__":
           f" {round((pa.v_ring() - pa.v_compress_ring()) * Const.ro/efts2.gf2(), 4)} sec")
     print(f" spring back pressure {round(pa.f_spring()/ 1000, 3)} kPa")
     print(f"V ring: max{round(pa.v_ring() * 1e6,1)}, min{round(pa.v_compress_ring() * 1e6,1)} cm3 ")
+    print(pa.f_spring())
 
     # for i in range(30, 40, 1):
     #     d_choke = 0.001  # 1 mm hole in choke

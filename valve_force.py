@@ -20,20 +20,18 @@ The pump power has been increased to -10 kPa. """
 
 from scipy import constants
 from numpy import pi, sqrt
+from bt_mech_equation import MyConst
 
 
 class InDim:
-    num_suct = 12
+    num_suct = MyConst.nofm
     mgcons = constants.mu_0
-    suct_rad = 0.0042
-    h_glove = 0.0001
-    ribbnE = 500000  # Pa
     ohmmtr00005 = 9.29
     wire = 0.00005
 
 
 class OutDim:
-    pump_vcm = 10000
+    pump_vcm = 25000
     hole = 0.0005
     gap = 0.001
     i_battr = 0.1
@@ -44,8 +42,8 @@ class OutDim:
 
 # https://engineeringlibrary.org/reference/membranes-air-force-stress-manual
 def z_sphere(x):
-    return 0.662 * InDim.suct_rad * ((x * InDim.suct_rad) /
-                                     (InDim.ribbnE * InDim.h_glove)) ** (1 / 3)
+    return 0.662 * MyConst.suct_rad * ((x * MyConst.suct_rad) /
+                                     (MyConst.rib_E * MyConst.glove_th)) ** (1 / 3)
 
 
 class PowValve:
@@ -57,7 +55,7 @@ class PowValve:
         self.half = 3600
         self.hole = h
         self.gap = g
-        self.suct = z * InDim.suct_rad * 2 * pi
+        self.suct = z * MyConst.suct_rad * 2 * pi
 
     def diff(self):
         return (self.hole ** 2 * pi) / self.suct
@@ -75,6 +73,9 @@ class PowValve:
 # F = (n * i)**2 * mgconst * a / (2 * gap**2)
 # n = number of turns in the solenoid
 # a = Area
+# Area = InDim.suct_rad * OutDim.hole * 2
+# fup = pwalv.pic_pow_f()
+# ni = sqrt(fup / (InDim.mgcons * Area / (2 * OutDim.gap**2)))
 
 
 class SolenoidValve:
@@ -111,15 +112,11 @@ class SolenoidValve:
 
 zsp = z_sphere(OutDim.pump_vcm)
 pwalv = PowValve(OutDim.pump_vcm, zsp, OutDim.hole, OutDim.gap)
-solval = SolenoidValve(OutDim.gap, InDim.suct_rad, OutDim.gap)
+solval = SolenoidValve(OutDim.gap, MyConst.suct_rad, OutDim.gap)
 
-
-# Area = InDim.suct_rad * OutDim.hole * 2
-# fup = pwalv.pic_pow_f()
-# ni = sqrt(fup / (InDim.mgcons * Area / (2 * OutDim.gap**2)))
 
 if __name__ == "__main__":
-    print(f"{round(zsp * 1000, 2)} mm membrane deflection")
+    print(f"{round(zsp * 1000, 2)} mm membrane deflection, top cup ins 4:5-1.95mm ")
     print(f"{round(pwalv.pic_pow_wt() * 1000, 2)} mwt s {round(pwalv.batter(), 2)} wt batter")
     print(f"{int(solval.ni())} turns magnet winding to {OutDim.i_battr}A")
     print(f"{round(solval.wireohm(), 2)} ohm conductor resistance ")
