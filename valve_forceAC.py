@@ -17,24 +17,24 @@ from math import pi
 class ValveSpring:
 
     def __init__(self, n, dl):
-        self.nc = n
-        self.dln = dl
-        # self.spf = spring_f(MyConst.stl, 0.0005, 0.005, n, dl)
+        self.nc = n  # number of turns
+        self.dln = dl  # and delta of spring compression
+        self.d_wire = 0.0002  # spring wire diameter
+        self.d_coil = 0.0025  # spring coil diameter
 
     def __call__(self, v):
-        spf = spring_f(MyConst.stl, 0.0002, 0.0025, self.nc, self.dln)
+        spf = spring_f(MyConst.stl, self.d_wire, self.d_coil, self.nc, self.dln)
         hbbl = z_sphere(v)
         sholl = MyConst.suct_rad**2 * pi
-        # return spf, hbbl, sholl
         if hbbl < 0.002:
-            return f"{hbbl * 1000} mm h sphere "
+            return f"{round(hbbl * 1000, 3)} mm H deformation, {round(spf, 3)} N spring force "
         else:
-            return f"{spf / (v * sholl)} spring/valve air power "
+            return f"{round(spf / (v * sholl), 3)} spring/valve air power "
 
 
 v_spr = ValveSpring(10, 0.005)
 
 if __name__ == "__main__":
-    for i in range(1, 20):
-        i1 = i * 1000
-        print(f"{v_spr(i1)} in vacuum {i} - kPa ")
+    for i in range(1, 15):
+        i1 = i * 1000.0
+        print(f"{v_spr(i1)} in vacuum: {i} - kPa ")
