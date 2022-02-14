@@ -26,6 +26,8 @@ class Const:
     rib_E = 855000  # nitrile modulus of elasticity
     cr_beta = 0.526  # critical σ*
     cr_beta_f = 0.259  # flow rate function φ(σ)*
+    u_sll = 100  # magnetic steel
+    u_frt = 640  # magnetic ferrite
 
 
 class GasFlow:

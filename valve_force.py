@@ -24,8 +24,6 @@ from bt_mech_equation import MyConst
 
 
 class InDim:
-    num_suct = MyConst.nofm
-    mgcons = constants.mu_0
     ohmmtr00005 = 9.29
     wire = 0.00005
 
@@ -43,7 +41,7 @@ class OutDim:
 # https://engineeringlibrary.org/reference/membranes-air-force-stress-manual
 def z_sphere(x):
     return 0.662 * MyConst.suct_rad * ((x * MyConst.suct_rad) /
-                                     (MyConst.rib_E * MyConst.glove_th)) ** (1 / 3)
+                                       (MyConst.rib_E * MyConst.glove_th)) ** (1 / 3)
 
 
 class PowValve:
@@ -67,15 +65,15 @@ class PowValve:
         return self.suct * self.pump * self.diff() * self.gap
 
     def batter(self):
-        return self.pic_pow_wt() * self.half * InDim.num_suct
+        return self.pic_pow_wt() * self.half * MyConst.nofm
 
 
-# F = (n * i)**2 * mgconst * a / (2 * gap**2)
+# F = (n * i)**2 * mgconst* m_x * a / (2 * gap**2)
 # n = number of turns in the solenoid
 # a = Area
 # Area = InDim.suct_rad * OutDim.hole * 2
 # fup = pwalv.pic_pow_f()
-# ni = sqrt(fup / (InDim.mgcons * Area / (2 * OutDim.gap**2)))
+# ni = sqrt(2 * OutDim.gap**2 * fup / (OutDim.i_battr ** 2 * constants.mu_0 *  m_x * Area ))
 
 
 class SolenoidValve:
@@ -94,9 +92,9 @@ class SolenoidValve:
         zp = z_sphere(OutDim.pump_vcm)
         pw = PowValve(OutDim.pump_vcm, zp, self.rad_w, self.gap)
         fp = pw.pic_pow_f()
-        ni1 = sqrt(fp / (constants.mu_0 * self.pinarea() / (2 * self.gap ** 2)))
-        n2 = ni1 / OutDim.i_battr
-        return n2
+        ni1 = sqrt(2 * OutDim.gap ** 2 * fp /
+                   (OutDim.i_battr ** 2 * constants.mu_0 * MyConst.u_sll * self.pinarea()))
+        return ni1
 
     def wireohm(self):
         lwr = (2 * (self.w_pin + self.w_flp)) * self.ni()
