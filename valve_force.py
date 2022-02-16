@@ -31,7 +31,7 @@ class InDim:
 class OutDim:
     pump_vcm = 25000
     hole = 0.0005
-    gap = 0.001
+    gap = MyConst.mt_valve
     i_battr = 0.1
     l_mgn = 0.005
     w_mgn = 0.003

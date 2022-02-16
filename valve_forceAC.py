@@ -12,6 +12,9 @@ from bt_mech_equation import MyConst
 from bt_mech_equation import spring_f
 from valve_force import z_sphere
 from math import pi
+from wrist import Male_wrst
+from bt_mech_equation import PneumAct
+from scipy import constants
 
 
 class ValveSpring:
@@ -32,9 +35,70 @@ class ValveSpring:
             return f"{round(spf / (v * sholl), 3)} spring/valve air power "
 
 
+class SpringPressH(ValveSpring):
+    def h_pr(self):
+        return self.nc * self.d_wire * 1.1
+
+
+pa3 = PneumAct(Male_wrst, MyConst.plt)
 v_spr = ValveSpring(10, 0.005)
+sp = SpringPressH(10, 0.005)
+
+
+class Solenoid:
+    def __init__(self, x, y):
+        self.sp_pr = sp.h_pr()
+        self.wall = MyConst.vcht
+        self.h_ch = MyConst.h_chamb
+        self.core_w = MyConst.scw
+        self.s_r = MyConst.suct_rad
+        self.mt_valve = MyConst.mt_valve
+        self.core_thick = x  # magnetic core body thickness
+        self.d_wire = y   # solenoid wire diameter
+        self.cu_res = MyConst.cu_res
+
+    def chamb_h(self):
+        top_btm = self.s_r + self.wall * 2
+        return self.h_ch - top_btm
+
+    def core_ln(self):
+        return pa3.w_chamb() - self.wall * 2
+
+    def inner_space(self):
+        bend = 0.001  # core bend
+        flange = 0.001  # suction cup flange
+        vl_th = 0.0005  # valve thickness
+        arm_core = 0.001  # magnet fastener
+        msc = self.mt_valve + self.core_thick
+        return self.chamb_h() - (bend + flange + msc + vl_th + arm_core)
+
+    def spring_washer(self):
+        return self.inner_space() - sp.h_pr() + 0.001
+
+    def num_torn(self):
+        return int(self.inner_space() / self.d_wire)
+
+    def real_res(self):
+        insulation_coil = 0.0005
+        perm = (self.core_thick + insulation_coil) * 2 + (self.core_w + insulation_coil) * 2
+        wire_a = perm * self.num_torn()
+        d_wire_cu = 0.1  # mm
+        return round(4 * self.cu_res * wire_a / (pi * d_wire_cu**2), 1)
+        # R = 4 * p * a / (pi * d ** 2)
+
+    def __call__(self, u):
+        s_core = self.core_thick * self.core_w
+        return constants.mu_0 * u * self.num_torn()**2 * s_core / self.inner_space()
+        # L = (μ0μ * N ** 2 * S) / ln https://en.wikipedia.org/wiki/Inductance
+
+
+sl = Solenoid(0.001, 0.00013)
 
 if __name__ == "__main__":
+    print(f"{sl(100)} H solenoid inductance")
+    print(f"{sl.real_res()} ohm - coil winding resistance real")
+    print(f"{int(sl.spring_washer() * 1000)} mm spring washer height")
+    print(f"{sl.num_torn()} number of turns of the solenoid winding")
     for i in range(1, 15):
         i1 = i * 1000.0
         print(f"{v_spr(i1)} in vacuum: {i} - kPa ")

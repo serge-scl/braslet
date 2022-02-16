@@ -62,13 +62,15 @@ class MyConst(Const):
     dpsh = 0.009  # diameter of the pneumatic drive section of the pill shape
     nsom = 3  # number of sections in one module
     nofm = 12  # number of modules
-    wcht = 0.001  # vacuum chamber wall thickness
+    vcht = 0.001  # vacuum chamber wall thickness
     acth = 0.001  # actuator connection tube height
     actw = 0.002  # actuator connection tube width
-    scw = 0.005  # solenoid core width
+    scw = 0.01  # solenoid core width
     dpsr = 0.001  # diameter of the pressure supply pipe from the receiver
     glove_th = 0.0001  # glove rubber thickness
     suct_rad = 0.0042  # suction ring radius
+    mt_valve = 0.001  # valve  motion
+    cu_res = 0.0175 # ohm mm2 / m copper resistivity
 
 
 # Fspr = k*L H/m
@@ -125,9 +127,9 @@ class VacuumChamber:
         self.w_chamb = w
         self.h_chamb = MyConst.h_chamb
         self.ln_chamb = MyConst.ln_chamb
-        self.shell = MyConst.wcht
+        self.shell = MyConst.vcht
         self.wsl = wsl
-        self.suct_cup = MyConst.nofm
+        self.suct_cup = MyConst.suct_rad
 
     def v_solenoid(self):
         lnsl = self.w_chamb - self.shell * 2
@@ -136,7 +138,7 @@ class VacuumChamber:
         return lnsl * hsl * self.wsl
 
     def free_v_chamb(self):
-        ins_h = self.h_chamb - self.shell
+        ins_h = self.h_chamb - (self.shell * 2 + self.suct_cup)
         ins_ln = self.ln_chamb - self.shell
         ins_w = self.w_chamb - self.shell
         return ins_h * ins_ln * ins_w - self.v_solenoid()
@@ -159,11 +161,10 @@ if __name__ == "__main__":
           f" {round((pa.v_ring() - pa.v_compress_ring()) * Const.ro/efts2.gf2(), 4)} sec")
     print(f" spring back pressure {round(pa.f_spring()/ 1000, 3)} kPa")
     print(f"V ring: max{round(pa.v_ring() * 1e6,1)}, min{round(pa.v_compress_ring() * 1e6,1)} cm3 ")
-    print(pa.f_spring())
 
-    # for i in range(30, 40, 1):
-    #     d_choke = 0.001  # 1 mm hole in choke
-    #     i01 = i / 10
-    #     efts = GasFlow(i01, d_choke, atm+pa.f_spring())
-    #     print(f" fwp {round(efts.gf1() * 1000, 5)},beta* {round(efts.gf2() * 1000, 5)} g/s"
-    #           f"  V fill {round((pa.v_ring() - pa.v_compress_ring()) * Const.ro/efts.gf2(), 4)} sec, {i01} atm")
+    for i in range(30, 40, 1):
+        d_choke = 0.001  # 1 mm hole in choke
+        i01 = i / 10
+        efts = GasFlow(i01, d_choke, atm+pa.f_spring())
+        print(f" fwp {round(efts.gf1() * 1000, 5)},beta* {round(efts.gf2() * 1000, 5)} g/s"
+              f"  V fill {round((pa.v_ring() - pa.v_compress_ring()) * Const.ro/efts.gf2(), 4)} sec, {i01} atm")
