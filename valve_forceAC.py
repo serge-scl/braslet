@@ -86,19 +86,36 @@ class Solenoid:
         return round(4 * self.cu_res * wire_a / (pi * d_wire_cu**2), 1)
         # R = 4 * p * a / (pi * d ** 2)
 
-    def __call__(self, u):
+    def __call__(self, mu):
         s_core = self.core_thick * self.core_w
-        return constants.mu_0 * u * self.num_torn()**2 * s_core / self.inner_space()
+        return constants.mu_0 * mu * self.num_torn()**2 * s_core / self.inner_space()
         # L = (μ0μ * N ** 2 * S) / ln https://en.wikipedia.org/wiki/Inductance
 
 
 sl = Solenoid(0.001, 0.00013)
 
+F_hz = 3.5e3  # operating frequency
+
+
+class Capacitor:
+    def __init__(self, m):
+        self.sln_l = sl(m)
+        # self.r_sln_re = sl.real_res()
+
+    def __call__(self, f):
+        w = 2 * pi * f
+        return 1 / (w**2 * self.sln_l * 2)
+
+
+cap = Capacitor(MyConst.u_stl)
+
+
 if __name__ == "__main__":
-    print(f"{sl(100)} H solenoid inductance")
+    print(f"capacitor rating {round(cap(F_hz) * 1e6, 1)} uF in  frequency {F_hz / 1000} kHz ")
+    print(f"{round(sl(MyConst.u_stl), 4)} H solenoid inductance")
     print(f"{sl.real_res()} ohm - coil winding resistance real")
     print(f"{int(sl.spring_washer() * 1000)} mm spring washer height")
     print(f"{sl.num_torn()} number of turns of the solenoid winding")
-    for i in range(1, 15):
-        i1 = i * 1000.0
-        print(f"{v_spr(i1)} in vacuum: {i} - kPa ")
+    # for i in range(1, 15):
+    #     i1 = i * 1000.0
+    #     print(f"{v_spr(i1)} in vacuum: {i} - kPa ")

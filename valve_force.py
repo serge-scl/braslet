@@ -93,7 +93,7 @@ class SolenoidValve:
         pw = PowValve(OutDim.pump_vcm, zp, self.rad_w, self.gap)
         fp = pw.pic_pow_f()
         ni1 = sqrt(2 * OutDim.gap ** 2 * fp /
-                   (OutDim.i_battr ** 2 * constants.mu_0 * MyConst.u_sll * self.pinarea()))
+                   (OutDim.i_battr ** 2 * constants.mu_0 * MyConst.u_stl * self.pinarea()))
         return ni1
 
     def wireohm(self):
