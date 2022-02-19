@@ -62,7 +62,8 @@ class Solenoid:
         return self.h_ch - top_btm
 
     def core_ln(self):
-        return pa3.w_chamb() - self.wall * 2
+        gap = 0.001  # gap between the spring and the walls of the magnet
+        return v_spr.d_coil + 2 * self.core_thick + 2 * gap
 
     def inner_space(self):
         bend = 0.001  # core bend
@@ -76,7 +77,7 @@ class Solenoid:
         return self.inner_space() - sp.h_pr() + 0.001
 
     def num_torn(self):
-        return int(self.inner_space() / self.d_wire)
+        return int(self.inner_space() * 2 / self.d_wire)
 
     def real_res(self):
         insulation_coil = 0.0005
@@ -88,32 +89,32 @@ class Solenoid:
 
     def __call__(self, mu):
         s_core = self.core_thick * self.core_w
-        return constants.mu_0 * mu * self.num_torn()**2 * s_core / self.inner_space()
+        return constants.mu_0 * mu * self.num_torn()**2 * s_core / (self.inner_space() * 2 + self.core_ln())
         # L = (μ0μ * N ** 2 * S) / ln https://en.wikipedia.org/wiki/Inductance
 
 
 sl = Solenoid(0.001, 0.00013)
 
-F_hz = 3.5e3  # operating frequency
+F_hz = 5e3  # operating frequency
 
 
 class Capacitor:
     def __init__(self, m):
         self.sln_l = sl(m)
-        # self.r_sln_re = sl.real_res()
 
     def __call__(self, f):
         w = 2 * pi * f
-        return 1 / (w**2 * self.sln_l * 2)
+        return 1 / (w**2 * self.sln_l)
 
 
 cap = Capacitor(MyConst.u_stl)
 
 
 if __name__ == "__main__":
-    print(f"capacitor rating {round(cap(F_hz) * 1e6, 1)} uF in  frequency {F_hz / 1000} kHz ")
+    print(f"capacitor rating {round(cap(F_hz) * 1e6, 2)} uF in  frequency {F_hz / 1000} kHz ")
     print(f"{round(sl(MyConst.u_stl), 4)} H solenoid inductance")
-    print(f"{sl.real_res()} ohm - coil winding resistance real")
+    print(f"{sl.real_res()} ohm - coil winding resistance real,"
+          f" {sl(MyConst.u_stl) * 2j * pi * F_hz} ohm Z")
     print(f"{int(sl.spring_washer() * 1000)} mm spring washer height")
     print(f"{sl.num_torn()} number of turns of the solenoid winding")
     # for i in range(1, 15):
