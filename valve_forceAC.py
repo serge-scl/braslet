@@ -15,6 +15,7 @@ from math import pi
 from wrist import Male_wrst
 from bt_mech_equation import PneumAct
 from scipy import constants
+# from impedance.models.circuits import elements as elm
 
 
 class ValveSpring:
@@ -111,8 +112,9 @@ cap = Capacitor(MyConst.u_stl)
 
 
 if __name__ == "__main__":
+    print(sl.inner_space())
     print(f"capacitor rating {round(cap(F_hz) * 1e6, 2)} uF in  frequency {F_hz / 1000} kHz ")
-    print(f"{round(sl(MyConst.u_stl), 4)} H solenoid inductance")
+    print(f"{round(sl(MyConst.u_stl), 6)} H solenoid inductance")
     print(f"{sl.real_res()} ohm - coil winding resistance real,"
           f" {sl(MyConst.u_stl) * 2j * pi * F_hz} ohm Z")
     print(f"{int(sl.spring_washer() * 1000)} mm spring washer height")
