@@ -1,3 +1,4 @@
 # Project exclude paths
 /venv/
 *1
+*.pyc
