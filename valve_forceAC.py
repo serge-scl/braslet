@@ -112,7 +112,6 @@ cap = Capacitor(MyConst.u_stl)
 
 
 if __name__ == "__main__":
-    print(sl.inner_space())
     print(f"capacitor rating {round(cap(F_hz) * 1e6, 2)} uF in  frequency {F_hz / 1000} kHz ")
     print(f"{round(sl(MyConst.u_stl), 6)} H solenoid inductance")
     print(f"{sl.real_res()} ohm - coil winding resistance real,"
