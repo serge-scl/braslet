@@ -63,6 +63,10 @@ class MyConst(Const):
     nsom = 3  # number of sections in one module
     nofm = 12  # number of modules
     vcht = 0.001  # vacuum chamber wall thickness
+    ceil = 0.001 # chamber ceiling thickness
+    floor = 0.001  # chamber floor
+    flange = 0.001  # suction cup flange in chamber
+    mount_core = 0.001  # magnet mounting platform
     acth = 0.001  # actuator connection tube height
     actw = 0.002  # actuator connection tube width
     scw = 0.01  # solenoid core width

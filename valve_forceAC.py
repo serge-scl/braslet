@@ -57,9 +57,13 @@ class Solenoid:
         self.core_thick = x  # magnetic core body thickness
         self.d_wire = y   # solenoid wire diameter
         self.cu_res = MyConst.cu_res
+        self.ceil = MyConst.ceil
+        self.floor = MyConst.floor
+        self.m_core = MyConst.mount_core
+        self.flange = MyConst.flange
 
     def chamb_h(self):
-        top_btm = self.s_r + self.wall * 2
+        top_btm = self.s_r + self.ceil + self.floor
         return self.h_ch - top_btm
 
     def core_ln(self):
@@ -68,11 +72,9 @@ class Solenoid:
 
     def inner_space(self):
         bend = 0.001  # core bend
-        flange = 0.001  # suction cup flange
         vl_th = 0.0005  # valve thickness
-        arm_core = 0.001  # magnet fastener
-        msc = self.mt_valve + self.core_thick
-        return self.chamb_h() - (bend + flange + msc + vl_th + arm_core)
+        msc = self.mt_valve + self.core_thick + self.m_core + self.flange
+        return self.chamb_h() - (bend + msc + vl_th)
 
     def spring_washer(self):
         return self.inner_space() - sp.h_pr() + 0.001
@@ -112,6 +114,7 @@ cap = Capacitor(MyConst.u_stl)
 
 
 if __name__ == "__main__":
+    print(f"{round(sl.chamb_h()* 1000, 1)} mm chamber interior ")
     print(f"capacitor rating {round(cap(F_hz) * 1e6, 2)} uF in  frequency {F_hz / 1000} kHz ")
     print(f"{round(sl(MyConst.u_stl), 6)} H solenoid inductance")
     print(f"{sl.real_res()} ohm - coil winding resistance real,"
