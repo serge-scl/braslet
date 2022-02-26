@@ -71,16 +71,16 @@ class Solenoid:
         return v_spr.d_coil + 2 * self.core_thick + 2 * gap
 
     def inner_space(self):
-        bend = 0.001  # core bend
         vl_th = 0.0005  # valve thickness
         msc = self.mt_valve + self.core_thick + self.m_core + self.flange
-        return self.chamb_h() - (bend + msc + vl_th)
+        return self.chamb_h() - (msc + vl_th)
 
     def spring_washer(self):
-        return self.inner_space() - sp.h_pr() + 0.001
+        return self.inner_space() - sp.h_pr()
 
     def num_torn(self):
-        return int(self.inner_space() * 2 / self.d_wire)
+        bend = 0.001  # gap under flange bend
+        return int((self.inner_space() - bend) * 2 / self.d_wire)
 
     def real_res(self):
         insulation_coil = 0.0005
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     print(f"{round(sl(MyConst.u_stl), 6)} H solenoid inductance")
     print(f"{sl.real_res()} ohm - coil winding resistance real,"
           f" {sl(MyConst.u_stl) * 2j * pi * F_hz} ohm Z")
-    print(f"{int(sl.spring_washer() * 1000)} mm spring washer height")
+    print(f"{round(sl.spring_washer() * 1000, 1)} mm spring washer height")
     print(f"{sl.num_torn()} number of turns of the solenoid winding")
     # for i in range(1, 15):
     #     i1 = i * 1000.0
