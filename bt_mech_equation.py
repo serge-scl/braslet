@@ -63,7 +63,7 @@ class MyConst(Const):
     nsom = 3  # number of sections in one module
     nofm = 12  # number of modules
     vcht = 0.001  # vacuum chamber wall thickness
-    ceil = 0.001 # chamber ceiling thickness
+    ceil = 0.001  # chamber ceiling thickness
     floor = 0.001  # chamber floor
     flange = 0.001  # suction cup flange in chamber
     mount_core = 0.001  # magnet mounting platform
@@ -74,7 +74,7 @@ class MyConst(Const):
     glove_th = 0.0001  # glove rubber thickness
     suct_rad = 0.0042  # suction ring radius
     mt_valve = 0.001  # valve  motion
-    cu_res = 0.0175 # ohm mm2 / m copper resistivity
+    cu_res = 0.0175  # ohm mm2 / m copper resistivity
 
 
 # Fspr = k*L H/m
@@ -127,25 +127,29 @@ class PneumAct:
 
 
 class VacuumChamber:
-    def __init__(self, w, wsl):
+    def __init__(self, w, wsl, th):
         self.w_chamb = w
         self.h_chamb = MyConst.h_chamb
         self.ln_chamb = MyConst.ln_chamb
         self.shell = MyConst.vcht
         self.wsl = wsl
         self.suct_cup = MyConst.suct_rad
+        self.mg_th = th
 
     def v_solenoid(self):
-        lnsl = self.w_chamb - self.shell * 2
-        sch = self.suct_cup + self.shell  # suction cup height
-        hsl = self.h_chamb - (sch + self.shell * 2)
-        return lnsl * hsl * self.wsl
+        lnsl = 0.0065 + 0.0092 * 2
+        #  valve
+        # spring
+        return lnsl * self.mg_th * self.wsl
 
     def free_v_chamb(self):
         ins_h = self.h_chamb - (self.shell * 2 + self.suct_cup)
         ins_ln = self.ln_chamb - self.shell
         ins_w = self.w_chamb - self.shell
-        return ins_h * ins_ln * ins_w - self.v_solenoid()
+        fangs = 0.0036 * 0.0018 * 0.01 * 4
+        step = 0.008 * 0.003 * 0.003 * 2
+        throttle = 0.003 * 0.004 * 0.0045 * 2
+        return ins_h * ins_ln * ins_w - self.v_solenoid() - fangs - step - throttle
 
     def suction_cup_ratio(self):
         v_cup = (4 * pi * self.suct_cup**3) / 6
@@ -155,7 +159,7 @@ class VacuumChamber:
 pa = PneumAct(Male_wrst, Const.plpr)
 pa2 = PneumAct(Female_wrst, Const.plpr)
 efts2 = GasFlow(1.2, MyConst.dpsr)
-vch = VacuumChamber(pa.w_chamb(), MyConst.scw)
+vch = VacuumChamber(pa.w_chamb(), MyConst.scw, 0.001)
 
 if __name__ == "__main__":
     print(f"vacuum chamber width {round((pa.w_chamb()) * 1000, 2)} mm")
