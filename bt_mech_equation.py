@@ -136,20 +136,22 @@ class VacuumChamber:
         self.suct_cup = MyConst.suct_rad
         self.mg_th = th
 
-    def v_solenoid(self):
-        lnsl = 0.0065 + 0.0092 * 2
-        #  valve
-        # spring
+    def vl_core_sln(self):
+        ln_top = 0.0065  # top length
+        ln_side = 0.0092  # length of each side
+        lnsl = ln_top + ln_side * 2
         return lnsl * self.mg_th * self.wsl
 
     def free_v_chamb(self):
         ins_h = self.h_chamb - (self.shell * 2 + self.suct_cup)
         ins_ln = self.ln_chamb - self.shell
         ins_w = self.w_chamb - self.shell
-        fangs = 0.0036 * 0.0018 * 0.01 * 4
-        step = 0.008 * 0.003 * 0.003 * 2
-        throttle = 0.003 * 0.004 * 0.0045 * 2
-        return ins_h * ins_ln * ins_w - self.v_solenoid() - fangs - step - throttle
+        fangs = 0.0036 * 0.0018 * 0.01 * 4  # floor fangs volume
+        step = 0.008 * 0.003 * 0.003 * 2  # volume of ceiling steps
+        throttle = 0.003 * 0.004 * 0.0045 * 2  # vacuum line throttle volume
+        valve_slid = 0.004 * 0.004 * 0.003 * 2  # volume of valve sliders
+        stop_spring = 0.0015 ** 2 * pi * 0.0071  # spring compression limiter
+        return ins_h * ins_ln * ins_w - self.vl_core_sln() - fangs - step - throttle - valve_slid - stop_spring
 
     def suction_cup_ratio(self):
         v_cup = (4 * pi * self.suct_cup**3) / 6
