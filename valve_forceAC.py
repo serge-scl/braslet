@@ -91,7 +91,7 @@ class Solenoid:
         # R = 4 * p * a / (pi * d ** 2)
 
     def __call__(self, mu):
-        s_core = self.core_thick * self.core_w
+        s_core = self.core_thick * self.core_w * 2
         return constants.mu_0 * mu * self.num_torn()**2 * s_core / (self.inner_space() * 2 + self.core_ln())
         # L = (μ0μ * N ** 2 * S) / ln https://en.wikipedia.org/wiki/Inductance
 
