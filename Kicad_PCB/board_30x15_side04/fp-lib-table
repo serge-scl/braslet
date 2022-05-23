@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name "L_soln")(type "KiCad")(uri "${KIPRJMOD}/solenoid_ftp/L_soln.pretty")(options "")(descr ""))
+  (lib (name "MC_34152")(type "KiCad")(uri "${KIPRJMOD}/solenoid_ftp/MC_34152.pretty")(options "")(descr ""))
 )
