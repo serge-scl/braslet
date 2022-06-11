@@ -11,6 +11,7 @@ The force created by the air pressure must overcome the spring resistance and fr
 from wrist import Male_wrst, Female_wrst
 from math import sqrt
 from scipy.constants import atm, pi  # R , g, k, golden
+Bracelet_inf = 2
 
 
 class Const:
@@ -88,7 +89,7 @@ class PneumAct:
 
     def __init__(self, x, g):
         self.wrst = x/1000  # mm to m
-        self.wrst_inf = self.wrst * 2
+        self.wrst_inf = self.wrst * Bracelet_inf
         self.n_modl = MyConst.nofm
         self.n_pill = MyConst.nsom
         self.d_pill = MyConst.dpsh
