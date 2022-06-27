@@ -2,7 +2,7 @@
 
 from scipy.constants import atm, pi, golden_ratio
 from wrist import Male_wrst, Female_wrst
-from bt_mech_equation import Bracelet_inf
+from bt_mech_equation import Bracelet_inf, Const, spring_f
 
 
 class FaceSlot:
@@ -32,18 +32,32 @@ class VacuumChamber:
 
 
 class WeightAndForce:
-    def __init__(self, r, d):
-        self.spring_rad = r
+    def __init__(self, d, r, p):
         self.density = d
-        self.net_weight = 130
-        self.spring_ln_part = 200
+        self.spring_rad = r
+        self.p_act = p
+        self.net_weight = 130  # mm
+        self.spring_ln_part = 200  # mm
         self.part = 12
+        self.stl_shear_mod = Const.stl
 
     def gross_weight(self):
         spr_v = self.spring_rad**2 * pi * self.spring_ln_part
         d_mm3 = self.density/1000
         spr_w = spr_v * d_mm3 * self.part
-        return f"{round((spr_w + self.net_weight),1)} g bracelet total weight"
+        return f"{round((spr_w + self.net_weight),1)} g bracelet  weight"
+
+    def spring_ring_f(self):
+        el_2_ring = self.spring_ln_part / (2*pi * 1000)  # mm to m
+        spr_d = self.spring_rad * 2 / 1000  # r to d mm to m
+        ntr = 2
+        srf = spring_f(self.stl_shear_mod, spr_d, el_2_ring, ntr, self.p_act)
+        return srf
+
+    def piston_f(self):
+        space_p = (75 + 74 + 37) * 2 / 1e6
+        contr_f = self.spring_ring_f() / space_p
+        return contr_f + atm
 
 
 class AirReceivers:
@@ -72,8 +86,19 @@ if __name__ == "__main__":
     print(f" pass spring female {spr_mt_h_f, spr_mt_w_f} mm")
     print(f" space max male {round(fsm_full_m_inf.w_slot()), round(fsm_full_m_inf.h_slot())} mm")
     print(f" space max female {round(fsm_full_f_inf.w_slot()), round(fsm_full_f_inf.h_slot())} mm")
-    for i in range(5, 10):
-        i1 = 0.1 * i
-        waf = WeightAndForce(i1, 8)
+
+    print("select wire diameter")
+    for i in range(25, 110, 5):
+        i1 = 0.01 * i
+        waf = WeightAndForce(8, i1, 0.025)
         gw = waf.gross_weight()
-        print(f"{gw} at wire radius {round(i1,1)}")
+        sprf = waf.spring_ring_f()
+        psf = waf.piston_f()
+        print(f"{gw}, at wire D {round(i1 * 2,2)}, force {round(sprf,1)} N/m, {round(psf/atm, 3)} atm")
+    print("working pressure during expansion")
+    for i2 in range(3, 28):
+        i3 = i2 * 0.001
+        waf2 = WeightAndForce(8, 0.75, i3)
+        sprf2 = waf2.spring_ring_f()
+        psf2 = waf2.piston_f()
+        print(f" ln {round(i2, 2)} mm,  force{round(sprf2,2)} N/m, {round(psf2/atm,2)} atm")
