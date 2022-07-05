@@ -102,9 +102,9 @@ class ConExtSprings:
     def __init__(self, x, y):
         self.pow = x
         self.con_spr_ln = y
-        self.rad2 = 0.025
+        self.rad2 = 0.015
         self.rad1 = 0.005
-        self.wire_d = 0.001
+        self.wire_d = 0.00065
         self.pip_d = 0.002
         self.coil_n = 7
         self.stl = Const.stl
@@ -182,5 +182,5 @@ if __name__ == "__main__":
     # plt.plot(i2_lst, nm_lst)
     plt.plot(i2_lst, f_spr_0_lst)
     plt.plot(i2_lst, f_pip_0_lst)
-    plt.plot(i2_lst, br_lst)
+    # plt.plot(i2_lst, br_lst)
     plt.show()
