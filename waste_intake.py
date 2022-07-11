@@ -102,7 +102,7 @@ class ConExtSprings:
     def __init__(self, x, y):
         self.pow = x
         self.con_spr_ln = y
-        self.rad2 = 0.015
+        self.rad2 = 0.0125
         self.rad1 = 0.005
         self.wire_d = 0.00065
         self.pip_d = 0.002
