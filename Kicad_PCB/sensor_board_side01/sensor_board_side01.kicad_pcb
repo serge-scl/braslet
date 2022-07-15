@@ -102,7 +102,7 @@
 
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp 1ed8f329-c766-4498-91b2-9d96dc15d7f6)
-    (at 154.8 137.2)
+    (at 156.19 130)
     (descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
     (tags "resistor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -144,7 +144,7 @@
 
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp 2b8044bf-b3ed-4035-84df-00ec5000506f)
-    (at 158.5 138.4)
+    (at 169.9 136.2)
     (descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
     (tags "resistor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -186,7 +186,7 @@
 
   (footprint "Capacitor_SMD:C_0805_2012Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp 605b39d3-dc14-4c3c-98f1-aeeb1f1bf35a)
-    (at 158.5 136.3 180)
+    (at 168.65 128.8 180)
     (descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -228,7 +228,7 @@
 
   (footprint "cup_toch:toch_sens" (layer "F.Cu")
     (tedit 0) (tstamp 63a02441-ca21-4e77-b4ca-6ea4509a4e1e)
-    (at 168.7 141.1)
+    (at 163.3 133)
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
     (property "Sheetname" "")
     (path "/7ddb7f9d-c890-44e3-a3a7-83515586c3b3")
@@ -251,7 +251,7 @@
 
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp 64b7e825-a984-4132-84ef-a4f3454573f4)
-    (at 162 138)
+    (at 162.8 128.9)
     (descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
     (tags "resistor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -293,7 +293,7 @@
 
   (footprint "Package_DFN_QFN:DFN-8-1EP_2x2mm_P0.5mm_EP0.9x1.5mm" (layer "F.Cu")
     (tedit 5DC5F54E) (tstamp 69f87665-7702-4fca-ae0f-dd8203feffba)
-    (at 151.7 136)
+    (at 160.3 126.7)
     (descr "DFN, 8 Pin (http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8127-AVR-8-bit-Microcontroller-ATtiny4-ATtiny5-ATtiny9-ATtiny10_Datasheet.pdf), generated with kicad-footprint-generator ipc_noLead_generator.py")
     (tags "DFN NoLead")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -354,7 +354,7 @@
 
   (footprint "Capacitor_SMD:C_0805_2012Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp 6bc03ee2-1a6e-4d39-bf45-050da68a4eb3)
-    (at 164.3 136 180)
+    (at 170.4 132.8 180)
     (descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -396,7 +396,7 @@
 
   (footprint "Capacitor_SMD:C_0805_2012Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp 895f1e03-11cc-4d7a-8831-87b02114994e)
-    (at 151 138.9 180)
+    (at 165.7 124.9 180)
     (descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -438,7 +438,7 @@
 
   (footprint "ohm_metr:ohm_metr" (layer "F.Cu")
     (tedit 0) (tstamp 9e428e63-48df-4606-9508-3bed2ff36758)
-    (at 152.6 141.8)
+    (at 158.1 131.1)
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
     (property "Sheetname" "")
     (path "/8206cd9e-3a29-4623-bf65-a9c214c04539")
@@ -467,7 +467,7 @@
 
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp d09ce505-c894-4333-8007-118f5fbc2c9f)
-    (at 161.5 136.11 90)
+    (at 164.9 128.41 90)
     (descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
     (tags "resistor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -509,7 +509,7 @@
 
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu")
     (tedit 5F68FEEE) (tstamp f7942ac4-c95d-408b-b747-87f34174d367)
-    (at 154.4 138.7 180)
+    (at 155.7 133.3 180)
     (descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
     (tags "resistor")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
@@ -551,22 +551,22 @@
 
   (footprint "Connector_Hirose:Hirose_DF13-06P-1.25DSA_1x06_P1.25mm_Vertical" (layer "B.Cu")
     (tedit 5D246D4C) (tstamp 87eb6516-8137-42d9-b43e-5c786f425489)
-    (at 144.5 141 90)
+    (at 166.325 137.8 180)
     (descr "Hirose DF13 through hole, DF13-06P-1.25DSA, 6 Pins per row (https://www.hirose.com/product/en/products/DF13/DF13-2P-1.25DSA%2850%29/), generated with kicad-footprint-generator")
     (tags "connector Hirose DF13 vertical")
     (property "Sheetfile" "sensor_board_side01.kicad_sch")
     (property "Sheetname" "")
     (path "/679bc502-9a00-42cb-a2db-58ce09e9a170")
     (attr through_hole)
-    (fp_text reference "J1" (at 3.12 3.4 90) (layer "B.SilkS") hide
+    (fp_text reference "J1" (at 3.12 3.4) (layer "B.SilkS") hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
       (tstamp 8c3cc25e-93a5-4fa6-a19a-24eee930edcb)
     )
-    (fp_text value "Conn_01x06_Female" (at 3.12 -2.4 90) (layer "B.Fab") hide
+    (fp_text value "Conn_01x06_Female" (at 3.12 -2.4) (layer "B.Fab") hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
       (tstamp 4f8c5f9a-6cb4-4773-8f17-f91e157dadb6)
     )
-    (fp_text user "${REFERENCE}" (at 3.12 1.5 90) (layer "B.Fab") hide
+    (fp_text user "${REFERENCE}" (at 3.12 1.5) (layer "B.Fab") hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
       (tstamp f0adb0de-f373-4d2c-a52d-45836e070bbd)
     )
@@ -608,17 +608,17 @@
     (fp_line (start 7.7 2.2) (end -1.45 2.2) (layer "B.Fab") (width 0.1) (tstamp c5c32c97-520c-4997-9941-9390ded8fd98))
     (fp_line (start 7.7 -1.2) (end 7.7 2.2) (layer "B.Fab") (width 0.1) (tstamp da160167-2ac2-4b1c-a8c4-45f9d0543392))
     (fp_line (start -1.45 2.2) (end -1.45 -1.2) (layer "B.Fab") (width 0.1) (tstamp da493ce3-aca6-43be-9406-9aa6f36db179))
-    (pad "1" thru_hole roundrect (at 0 0 90) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask) (roundrect_rratio 0.25)
+    (pad "1" thru_hole roundrect (at 0 0 180) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask) (roundrect_rratio 0.25)
       (net 1 "VDD") (pinfunction "Pin_1") (pintype "passive") (tstamp d5a98b9d-f498-453c-966f-36e6e69ceb53))
-    (pad "2" thru_hole oval (at 1.25 0 90) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
+    (pad "2" thru_hole oval (at 1.25 0 180) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
       (net 2 "Net-(C1-Pad1)") (pinfunction "Pin_2") (pintype "passive") (tstamp 632dfa0b-6658-48f1-ac44-792b5abd4e5f))
-    (pad "3" thru_hole oval (at 2.5 0 90) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
+    (pad "3" thru_hole oval (at 2.5 0 180) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
       (net 10 "Net-(J1-Pad3)") (pinfunction "Pin_3") (pintype "passive") (tstamp be6ef4f8-37ce-454f-b887-9faeb22ac32d))
-    (pad "4" thru_hole oval (at 3.75 0 90) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
+    (pad "4" thru_hole oval (at 3.75 0 180) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
       (net 4 "unconnected-(J1-Pad4)") (pinfunction "Pin_4") (pintype "passive") (tstamp 2f9687c0-2d49-4b46-a740-9c29b463563b))
-    (pad "5" thru_hole oval (at 5 0 90) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
+    (pad "5" thru_hole oval (at 5 0 180) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
       (net 5 "unconnected-(J1-Pad5)") (pinfunction "Pin_5") (pintype "passive") (tstamp 09e22955-030b-4b0a-a00a-f9765b23182f))
-    (pad "6" thru_hole oval (at 6.25 0 90) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
+    (pad "6" thru_hole oval (at 6.25 0 180) (size 0.9 1.4) (drill 0.6) (layers *.Cu *.Mask)
       (net 6 "GND") (pinfunction "Pin_6") (pintype "passive") (tstamp 423ca2f5-1982-4588-9d6c-1543b28cc161))
     (model "${KICAD6_3DMODEL_DIR}/Connector_Hirose.3dshapes/Hirose_DF13-06P-1.25DSA_1x06_P1.25mm_Vertical.wrl"
       (offset (xyz 0 0 0))
@@ -627,13 +627,6 @@
     )
   )
 
-  (gr_arc (start 143.214214 143.1) (mid 142.214214 142.685786) (end 141.8 141.685786) (layer "Edge.Cuts") (width 0.16) (tstamp 1cad959c-e0c3-487d-acc1-f4a1a7099ed4))
-  (gr_circle (center 164.8 138.1) (end 164.354459 138.1) (layer "Edge.Cuts") (width 0.16) (fill none) (tstamp 20eae989-1c03-481d-b24b-67238bf6b81c))
-  (gr_arc (start 171.8 141.685786) (mid 171.385785 142.685785) (end 170.385786 143.1) (layer "Edge.Cuts") (width 0.16) (tstamp 40d3b5c2-cdf8-4a9f-87b2-7d40dea64634))
-  (gr_line (start 143.214214 143.1) (end 170.385786 143.1) (layer "Edge.Cuts") (width 0.16) (tstamp 5f9b6482-5cb2-4e38-a461-9a3297edfdea))
-  (gr_line (start 171.8 141.685786) (end 171.8 133.1) (layer "Edge.Cuts") (width 0.16) (tstamp 895a8a26-5fa6-44f1-847a-59db5df0fcb5))
-  (gr_circle (center 148.8 138.1) (end 148.348091 138.1) (layer "Edge.Cuts") (width 0.16) (fill none) (tstamp ccc69b14-696a-4d31-ae96-2db08880ed21))
-  (gr_line (start 171.8 133.1) (end 141.8 133.1) (layer "Edge.Cuts") (width 0.16) (tstamp d7560f7f-0dcf-47f7-8319-d2936f3957df))
-  (gr_line (start 141.8 133.1) (end 141.8 141.685786) (layer "Edge.Cuts") (width 0.16) (tstamp fd2d1abc-3164-4312-931c-b043a068f3a7))
+  (gr_circle (center 163.6 132.4) (end 153.7 132.6) (layer "Edge.Cuts") (width 0.1) (fill none) (tstamp d44be0f6-12f1-4e4a-ad75-8f42c3eca737))
 
 )
