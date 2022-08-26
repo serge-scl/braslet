@@ -25,7 +25,7 @@ class Const:
     plpr = 1e9  # polypropylene shear modulus
     plt = 117e6  # polyethylene shear modulus
     rib_E = 855000  # nitrile modulus of elasticity
-    cr_beta = 0.526  # critical σ*
+    cr_beta = 0.528  # Pa/Pm
     cr_beta_f = 0.259  # flow rate function φ(σ)*
     u_stl = 100  # magnetic steel
     u_frt = 640  # magnetic ferrite
@@ -34,6 +34,9 @@ class Const:
 class GasFlow:
     def __init__(self, p, d, pn=atm):
         self.v = Const.v
+        self.R = Const.Ra
+        self.T = Const.Tk
+        self.k = Const.k
         self.p = p * atm
         self.pn = pn
         self.beta = self.pn/self.p
@@ -43,16 +46,15 @@ class GasFlow:
         if self.beta <= Const.cr_beta:
             return Const.cr_beta_f
         elif self.beta > Const.cr_beta:
-            b1 = self.beta**(2/Const.k)
-            b2 = self.beta**((Const.k+1)/Const.k)
-            return sqrt(b1 - b2)
+            b1 = self.beta**(2/self.k)
+            b2 = self.beta**((self.k+1)/self.k)
+            return b1 - b2
 
     def gf1(self):
         return self.s * Const.a * Const.ro
 
     def gf2(self):
-        return self.s * (self.p - self.pn) * sqrt((2 * Const.k) /
-                                                  (Const.Ra * (Const.Tk + 20) * (Const.k - 1))) * self.exp_f()
+        return self.s * self.p * sqrt((2 * self.k) / (self.R * (self.T + 20) * (self.k - 1)) * self.exp_f())
 
 
 class MyConst(Const):
@@ -173,7 +175,7 @@ if __name__ == "__main__":
     print(f" spring back pressure {round(pa.f_spring()/ 1000, 3)} kPa")
     print(f"V ring: max{round(pa.v_ring() * 1e6,1)}, min{round(pa.v_compress_ring() * 1e6,1)} cm3 ")
 
-    for i in range(30, 40, 1):
+    for i in range(15, 30, 1):
         d_choke = 0.001  # 1 mm hole in choke
         i01 = i / 10
         efts = GasFlow(i01, d_choke, atm+pa.f_spring())
