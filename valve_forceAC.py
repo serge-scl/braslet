@@ -8,12 +8,10 @@ The Hall sensor will be replaced by current measurement in the solenoid circuit.
 To the solenoid coil itself will be added a parallel capacitor with an appropriately selected impedance.
 """
 
-from bt_mech_equation import MyConst
-from bt_mech_equation import spring_f
+from bt_mech_equation import MyConst, spring_f, PneumAct
 from valve_force import z_sphere
 from math import pi
 from wrist import Male_wrst
-from bt_mech_equation import PneumAct
 from scipy import constants
 # from impedance.models.circuits import elements as elm
 

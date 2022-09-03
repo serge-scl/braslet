@@ -7,7 +7,7 @@
 # Pressure - Prx / Pvx (positive or negative) in the receivers is also an unknown desired value.
 from scipy.constants import atm
 from bt_mech_equation import pa, vch, GasFlow, spring_f
-from math import sqrt, pi
+from numpy import pi, sqrt
 from bt_mech_equation import Const
 
 P0atm = atm
@@ -21,6 +21,13 @@ def spring_da(x):
     c = (0.022 + 0.01) * 2 / pi  # spring coil diameter
     n = 24  # number of turns
     return (spring_f(g, d, c, n, x) * x) / 2
+
+# dx/dt = (mx^2/t^2 + kx/2 + Es)/S
+# k - spring_da
+# E Const.rib_E
+# s ribbon 0.1 mm X 20 mm
+# S piston
+# m 150 g
 
 
 class VlsFlow(GasFlow):
@@ -44,4 +51,4 @@ vlsflw = VlsFlow(1.2, vlv1(1))
 if __name__ == "__main__":
     print(f"V act {round(V12act * 1e6,1)}cm3")
     print(f"V vacuum chamb ring{round(V12vch * 1e6, 1)}cm3")
-    print(f"old eqw {round(vlsflw.gf2() * 1e6,2)} sm3,  new eqw {round(vlsflw.gf3() * 1e6,2)} sm3")
+    print(f"old eqw {round(vlsflw.gf2() * 1e3,5)} g/sec,  new eqw {round(vlsflw.gf3() * 1e3,5)} g/sec")
