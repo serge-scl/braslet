@@ -49,7 +49,6 @@ plt.plot(tl, od)
 plt.show()
 
 
-
 class VlsFlow(GasFlow):
     def gf3(self):
         uc = 1
