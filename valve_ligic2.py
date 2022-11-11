@@ -9,49 +9,65 @@
 
 
 from valve_forceAC import F_hz, sl
-from bt_mech_equation import MyConst
+from bt_mech_equation import MyConst, spring_f
 from numpy import pi, sqrt
 from scipy import constants
 
 
 class Valve:
-    def __init__(self, x, v, i):
+    def __init__(self, x, v, ic, h):
         self.p_atm = 1
-        self.vacuum = x
-        self.pwm_v = v
-        self.pwm_i = i
-        self.fr = F_hz
-        self.induct = round(sl(MyConst.u_stl), 6)
+        self.vacuum = x * 1000  # vacuum kPa to Pa
+        self.pwm_v = v   # voltage
+        self.pwm_i = ic  # current
+        self.timer = h * 1000  # operating frequency kHz to Hz
+
+    def spring_vs_vacuum(self):
+        r_hole = 0.0005
+        s_hole = r_hole**2 * pi
+        power_vacuum = s_hole * self.vacuum
+        power_spring = spring_f(MyConst.stl,0.0002,0.0025,10,0.003)
+        ratio =  (power_spring - power_vacuum) / power_spring
+        return 7 * ratio
 
     def time_s(self):
         r_real = sl.real_res()
         r_z = sl(MyConst.u_stl) * 2 * pi * F_hz
-        spring_f = 7
-        return self.induct * spring_f / sqrt(r_real**2 + r_z**2)
+        spring_fq = self.spring_vs_vacuum()
+        induct = round(sl(MyConst.u_stl), 6)
+        return induct * spring_fq / sqrt(r_real**2 + r_z**2)
 
     def v_m_sec(self):
         return 0.001 / self.time_s()
 
+    def frequent(self):
+        return 1 / self.time_s()
+
     def equ_l(self):
-        n_torn = 70
+        frq = F_hz
+        n_torn = 127
         s_core = 0.01 * 0.001
         mu_0 = constants.mu_0
-        return 2 * pi * self.fr * mu_0 * s_core * n_torn**2
+        return 2 * pi * frq * mu_0 * s_core * n_torn**2
 
     def adc_v(self):
         if self.pwm_i == 0.1:
-            step = 100
+            step = int(self.timer / self.frequent())
             gup = MyConst.mt_valve
             gup0 = gup / step
-            v_open = self.equ_l() * self.pwm_i / gup
-            v_close = self.equ_l() * self.pwm_i / gup0
-            return f"{v_open} open, {v_close} close"
-        else:
-            return "power off"
+            for i in range(0, step):
+                gup_stp = gup - gup0 * i
+                yield round(self.equ_l() * self.pwm_i / gup_stp, 2)
+            # v_open = round(self.equ_l() * self.pwm_i / gup, 2)
+            # v_close = round(self.equ_l() * self.pwm_i / gup0, 2)
+            # return f"{v_open}V open, {v_close}V close {step} cycle"
 
 
 if __name__ == "__main__":
-    vlv = Valve(23, 12, 1)
-    print(f" {round(vlv.time_s() * 1000000, 6)} microsecond")
-    print(f" {round(vlv.v_m_sec(),2)} m/sec {round(vlv.v_m_sec(),2) * 3600 / 1000} km/ch")
-    print(vlv.adc_v())
+    vlv = Valve(10, 12, 0.1, 100)
+    print(f" {round(vlv.time_s() * 1000000, 3)} microsecond")
+    print(f" {round(vlv.v_m_sec(),2)} m/sec {round(vlv.v_m_sec(),2) * 3600 / 1000} km/ch,"
+          f" {round(vlv.frequent() /1000,3)} kHz")
+    for i1 in vlv.adc_v():
+        print(f" {i1} v to ADC sampling 100 kHz")
+    # print(f"{vlv.spring_vs_vacuum()} ratio power spring  that power  vacuum")
