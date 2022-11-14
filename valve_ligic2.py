@@ -8,34 +8,49 @@
 # the connection of the vacuum chamber with the suction cup and closes the hole in line.
 
 
-from valve_forceAC import F_hz, sl
+from valve_forceAC import F_hz  # sl
 from bt_mech_equation import MyConst, spring_f
 from numpy import pi, sqrt
 from scipy import constants
 
 
+def induct(x, s):
+    u0u = constants.mu_0 * MyConst.stl
+    return u0u * x**2 * s / 0.025
+
+
 class Valve:
-    def __init__(self, x, v, ic, h):
-        self.p_atm = 1
+    def __init__(self, x, v, ic, h, n):
+        # self.p_atm = 1
         self.vacuum = x * 1000  # vacuum kPa to Pa
         self.pwm_v = v   # voltage
         self.pwm_i = ic  # current
         self.timer = h * 1000  # operating frequency kHz to Hz
+        self.n_torn = n  # number of turns in a coil winding
+        self.w_core = 0.01
+        self.th_core = 0.001
+        self.frq = F_hz
 
     def spring_vs_vacuum(self):
         r_hole = 0.0005
         s_hole = r_hole**2 * pi
         power_vacuum = s_hole * self.vacuum
-        power_spring = spring_f(MyConst.stl,0.0002,0.0025,10,0.003)
-        ratio =  (power_spring - power_vacuum) / power_spring
+        power_spring = spring_f(MyConst.stl, 0.0002, 0.0025, 10, 0.003)
+        ratio = (power_spring - power_vacuum) / power_spring
         return 7 * ratio
 
+    def resist_real(self):
+        d = (self.w_core + self.th_core) * 2
+        ln = d * self.n_torn
+        return ln * 2.23  # 2.23 ohm/m copper wire 0.1 mm
+
     def time_s(self):
-        r_real = sl.real_res()
-        r_z = sl(MyConst.u_stl) * 2 * pi * F_hz
+        r_real = self.resist_real()
+        s_core = self.w_core * self.th_core
+        ind = induct(self.n_torn, s_core)
+        r_z = ind * 2 * pi * self.frq
         spring_fq = self.spring_vs_vacuum()
-        induct = round(sl(MyConst.u_stl), 6)
-        return induct * spring_fq / sqrt(r_real**2 + r_z**2)
+        return ind * spring_fq / sqrt(r_real**2 + r_z**2)
 
     def v_m_sec(self):
         return 0.001 / self.time_s()
@@ -44,30 +59,34 @@ class Valve:
         return 1 / self.time_s()
 
     def equ_l(self):
-        frq = F_hz
-        n_torn = 127
-        s_core = 0.01 * 0.001
-        mu_0 = constants.mu_0
-        return 2 * pi * frq * mu_0 * s_core * n_torn**2
+        n_torn = self.n_torn
+        return 2 * pi * self.frq * constants.mu_0 * self.w_core * self.th_core * n_torn**2
 
-    def adc_v(self):
-        if self.pwm_i == 0.1:
-            step = int(self.timer / self.frequent())
-            gup = MyConst.mt_valve
-            gup0 = gup / step
-            for i in range(0, step):
-                gup_stp = gup - gup0 * i
-                yield round(self.equ_l() * self.pwm_i / gup_stp, 2)
-            # v_open = round(self.equ_l() * self.pwm_i / gup, 2)
-            # v_close = round(self.equ_l() * self.pwm_i / gup0, 2)
-            # return f"{v_open}V open, {v_close}V close {step} cycle"
+    def __call__(self, x):
+        gup_fix = 0.0001
+        gup = x
+        if gup > gup_fix:
+            if self.pwm_i == 0.1:
+                step = int(self.timer / self.frequent())
+                gup0 = gup / step
+                for i in range(0, step):
+                    gup_stp = gup - gup0 * i + gup_fix
+                    yield round(self.equ_l() * self.pwm_i / gup_stp, 2)
+                # v_open = round(self.equ_l() * self.pwm_i / gup, 2)
+                # v_close = round(self.equ_l() * self.pwm_i / gup0, 2)
+                # return f"{v_open}V open, {v_close}V close {step} cycle"
+        else:
+            yield round(self.equ_l() * self.pwm_i / gup, 2)
 
 
 if __name__ == "__main__":
-    vlv = Valve(10, 12, 0.1, 100)
-    print(f" {round(vlv.time_s() * 1000000, 3)} microsecond")
-    print(f" {round(vlv.v_m_sec(),2)} m/sec {round(vlv.v_m_sec(),2) * 3600 / 1000} km/ch,"
-          f" {round(vlv.frequent() /1000,3)} kHz")
-    for i1 in vlv.adc_v():
-        print(f" {i1} v to ADC sampling 100 kHz")
-    # print(f"{vlv.spring_vs_vacuum()} ratio power spring  that power  vacuum")
+    adc = Valve(10, 12, 0.1, 100, 120)
+    print(f" {round(adc.time_s() * 1000000, 3)} microsecond")
+    print(f" {round(adc.v_m_sec(), 2)} m/sec {round(adc.v_m_sec(), 2) * 3600 / 1000} km/ch,"
+          f" {round(adc.frequent() / 1000, 3)} kHz")
+    for i1 in adc(0.001):
+        print(f" {i1} v to ADC  100 kHz")
+
+    adc2 = Valve(10, 12, 0.1, 100, 20)
+    for i1 in adc2(0.00001):
+        print(f" {i1} v to ADC  100 kHz captcha")
