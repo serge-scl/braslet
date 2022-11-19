@@ -10,8 +10,9 @@
 
 from valve_forceAC import F_hz  # sl
 from bt_mech_equation import MyConst, spring_f
-from numpy import pi, sqrt
+from numpy import pi, sqrt, average
 from scipy import constants
+# from statistics import mean
 
 
 def induct(x, s):
@@ -60,33 +61,59 @@ class Valve:
 
     def equ_l(self):
         n_torn = self.n_torn
-        return 2 * pi * self.frq * constants.mu_0 * self.w_core * self.th_core * n_torn**2
+        return 2 * pi * self.frq * constants.mu_0 * self.w_core * self.th_core * 2 * n_torn**2
+
+    def adc_v(self):
+        gup_fix = 0.0001
+        gup = 0.001
+        if gup > gup_fix:
+            step = int(self.timer / self.frequent())
+            gup0 = gup / step
+            middle_i = []
+            for i in range(0, step):
+                gup_stp = gup - gup0 * i + gup_fix
+                i_s = round(gup_stp * self.pwm_v / self.equ_l(), 2)
+                middle_i.append(i_s)
+                # return mean(middle_i)
+                return average(middle_i)
 
     def __call__(self, x):
         gup_fix = 0.0001
         gup = x
         if gup > gup_fix:
-            if self.pwm_i == 0.1:
-                step = int(self.timer / self.frequent())
-                gup0 = gup / step
-                for i in range(0, step):
-                    gup_stp = gup - gup0 * i + gup_fix
-                    yield round(self.equ_l() * self.pwm_i / gup_stp, 2)
-                # v_open = round(self.equ_l() * self.pwm_i / gup, 2)
-                # v_close = round(self.equ_l() * self.pwm_i / gup0, 2)
-                # return f"{v_open}V open, {v_close}V close {step} cycle"
+            step = int(self.timer / self.frequent())
+            gup0 = gup / step
+            for i in range(0, step):
+                gup_stp = gup - gup0 * i + gup_fix
+                yield round(self.equ_l() * self.adc_v() / gup_stp, 2)
+            # v_open = round(self.equ_l() * self.pwm_i / gup, 2)
+            # v_close = round(self.equ_l() * self.pwm_i / gup0, 2)
+            # return f"{v_open}V open, {v_close}V close {step} cycle"
         else:
-            yield round(self.equ_l() * self.pwm_i / gup, 2)
+            yield round(self.equ_l() * self.pwm_i / (gup + gup_fix), 2)
+
+
+class MicroController:
+    def __init__(self, x, y, t, r, h):
+        self.prior = x
+        self.next = y
+        self.touch = t
+        self.resist = r
+        self.hall = h
 
 
 if __name__ == "__main__":
-    adc = Valve(10, 12, 0.1, 100, 120)
+    adc = Valve(10, 3, 0.1, 100, 130)
     print(f" {round(adc.time_s() * 1000000, 3)} microsecond")
     print(f" {round(adc.v_m_sec(), 2)} m/sec {round(adc.v_m_sec(), 2) * 3600 / 1000} km/ch,"
           f" {round(adc.frequent() / 1000, 3)} kHz")
+    # for i2 in adc.adc_v():
+    #     print(f"{i2} i current")
+    print(f"{adc.adc_v()} middle i")
     for i1 in adc(0.001):
-        print(f" {i1} v to ADC  100 kHz")
-
-    adc2 = Valve(10, 12, 0.1, 100, 20)
-    for i1 in adc2(0.00001):
-        print(f" {i1} v to ADC  100 kHz captcha")
+        if i1 < 12:
+            print(f" {i1} v to ADC  100 kHz")
+        else:
+            adc2 = Valve(10, 3, 0.16, 100, 30)  # switch to short winding
+            for i2 in adc2(0.000005):
+                print(f" {i2} v to ADC  100 kHz captcha")
