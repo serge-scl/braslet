@@ -94,12 +94,18 @@ class Valve:
 
 
 class MicroController:
-    def __init__(self, x, y, t, r, h):
+    def __init__(self, x, y):
         self.prior = x
         self.next = y
-        self.touch = t
-        self.resist = r
-        self.hall = h
+
+    def sensor_current(self):
+        return 0
+
+    def senosor_touch(self):
+        return 1
+
+    def sensor_hall(self):
+        return 0
 
 
 if __name__ == "__main__":
