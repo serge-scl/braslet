@@ -33,7 +33,7 @@ class Valve:
         self.frq = F_hz
 
     def spring_vs_vacuum(self):
-        r_hole = 0.0005
+        r_hole = 0.0015
         s_hole = r_hole**2 * pi
         power_vacuum = s_hole * self.vacuum
         power_spring = spring_f(MyConst.stl, 0.0002, 0.0025, 10, 0.003)
@@ -123,3 +123,5 @@ if __name__ == "__main__":
             adc2 = Valve(10, 3, 0.16, 100, 30)  # switch to short winding
             for i2 in adc2(0.000005):
                 print(f" {i2} v to ADC  100 kHz captcha")
+
+    print(f"{adc.spring_vs_vacuum()/7} p/spring")
