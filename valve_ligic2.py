@@ -36,7 +36,7 @@ class Valve:
         r_hole = 0.0015
         s_hole = r_hole**2 * pi
         power_vacuum = s_hole * self.vacuum
-        power_spring = spring_f(MyConst.stl, 0.0002, 0.0025, 10, 0.003)
+        power_spring = spring_f(MyConst.stl, 0.00025, 0.0032, 12, 0.003)
         ratio = (power_spring - power_vacuum) / power_spring
         return 7 * ratio
 
@@ -111,7 +111,7 @@ class MicroController:
 if __name__ == "__main__":
     adc = Valve(10, 3, 0.1, 100, 130)
     print(f" {round(adc.time_s() * 1000000, 3)} microsecond")
-    print(f" {round(adc.v_m_sec(), 2)} m/sec {round(adc.v_m_sec(), 2) * 3600 / 1000} km/ch,"
+    print(f" {round(adc.v_m_sec(), 2)} m/sec {round(adc.v_m_sec() * 3600 / 1000, 2) } km/ch,"
           f" {round(adc.frequent() / 1000, 3)} kHz")
     # for i2 in adc.adc_v():
     #     print(f"{i2} i current")
